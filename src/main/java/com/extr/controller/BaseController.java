@@ -1,0 +1,438 @@
+package com.extr.controller;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.extr.controller.domain.QuestionFilter;
+import com.extr.controller.domain.QuestionImproveResult;
+import com.extr.domain.exam.ExamHistory;
+import com.extr.domain.exam.ExamPaper;
+import com.extr.domain.question.Field;
+import com.extr.domain.question.KnowledgePoint;
+import com.extr.domain.question.Question;
+import com.extr.domain.question.QuestionHistory;
+import com.extr.domain.question.UserQuestionHistory;
+import com.extr.security.UserInfo;
+import com.extr.service.ExamService;
+import com.extr.service.QuestionService;
+import com.extr.service.UserService;
+import com.extr.util.Page;
+import com.extr.util.PagingUtil;
+
+@Controller
+public class BaseController {
+
+	@Autowired
+	private ExamService examService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private QuestionService questionService;
+
+	/**
+	 * 网站首页
+	 * 
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String homePage(Model model, HttpServletRequest request) {
+
+		return "redirect:home";
+	}
+
+	/**
+	 * 管理员登录
+	 * 
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = { "/admin/home" }, method = RequestMethod.GET)
+	public String adminHomePage(Model model, HttpServletRequest request) {
+
+		return "redirect:/admin/question-list";
+	}
+
+	/**
+	 * 判断不同角色返回的页面
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	@RequestMapping(value = { "home" }, method = RequestMethod.GET)
+	public String directToBaseHomePage(Model model, HttpServletRequest request) {
+
+		try {
+			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
+					.getAuthentication()
+					.getPrincipal();
+		} catch (Exception e) {
+			return "login";
+		}
+
+		String result = request.getParameter("result");
+		if ("failed".equals(result)) {
+			model.addAttribute("result_msg", "登录失败");
+		}
+
+		if (SecurityContextHolder.getContext().getAuthentication() == null){
+			this.appendBaseInfo(model);
+			return "home";
+		}
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().endsWith("anonymousUser")){
+			this.appendBaseInfo(model);
+			return "home";
+		}
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<? extends GrantedAuthority> grantedAuthorities = userDetails.getAuthorities();
+
+		if (grantedAuthorities.contains(new GrantedAuthorityImpl("ROLE_ADMIN"))) {
+			return "redirect:admin/home";
+		} else if (grantedAuthorities.contains(new GrantedAuthorityImpl("ROLE_TEACHER"))) {
+			return "redirect:teacher/home";
+		} else if (grantedAuthorities.contains(new GrantedAuthorityImpl("ROLE_STUDENT"))) {
+			this.appendBaseInfo(model);
+			
+			return "home";
+		} else {
+			return "home";
+		}
+	}
+
+	/**
+	 * 管理员登录
+	 *
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = { "/start-exam" }, method = RequestMethod.GET)
+	public String startExam(Model model, HttpServletRequest request) {
+		this.appendBaseInfo(model);
+		return "start-exam";
+	}
+	
+	/**
+	 * 跳转模拟考试
+	 */
+	@RequestMapping(value = { "/to-practice-exam" }, method = RequestMethod.GET)
+	public String toPracticeExam(Model model, HttpServletRequest request) {
+		try {
+			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
+					.getAuthentication()
+					.getPrincipal();
+		} catch (Exception e) {
+			return "login";
+		}
+		this.appendBaseInfo(model);
+		return "toPracticeExam";
+	}
+
+	/**
+	 * 跳转正式考试
+	 */
+	@RequestMapping(value = { "/to-start-exam" }, method = RequestMethod.GET)
+	public String toStartExam(Model model, HttpServletRequest request) {
+		try {
+			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
+					.getAuthentication()
+					.getPrincipal();
+		} catch (Exception e) {
+			return "login";
+		}
+		this.appendBaseInfo(model);
+		return "toStartExam";
+	}
+
+	/**
+	 * 跳转试题管理
+	 */
+	@RequestMapping(value = { "/to-manage" }, method = RequestMethod.GET)
+	public String toManage(Model model, HttpServletRequest request) {
+		this.appendBaseInfo(model);
+		return "redirect:questionfilter-0-0-0-0-1.html";
+	}
+
+	/**
+	 * 试题列表
+	 */
+	@RequestMapping(value = "/questionfilter-{fieldId}-{knowledge}-{questionType}-{searchParam}-{page}.html", method = RequestMethod.GET)
+	public String questionListFilterPage(Model model,
+										 @PathVariable("fieldId") int fieldId,
+										 @PathVariable("knowledge") int knowledge,
+										 @PathVariable("questionType") int questionType,
+										 @PathVariable("searchParam") String searchParam,
+										 @PathVariable("page") int page) {
+
+		UserInfo userInfo;
+		try {
+			userInfo = (UserInfo) SecurityContextHolder.getContext()
+					.getAuthentication()
+					.getPrincipal();
+		} catch (Exception e) {
+			return "login";
+		}
+
+		QuestionFilter qf = new QuestionFilter();
+		qf.setFieldId(fieldId);
+		qf.setKnowledge(knowledge);
+		qf.setQuestionType(questionType);
+		if ("0".equals(searchParam)) {
+			searchParam = "-1";
+		}
+		qf.setSearchParam(searchParam);
+
+		Page<Question> pageModel = new Page<Question>();
+		pageModel.setPageNo(page);
+		pageModel.setPageSize(20);
+
+		List<Question> questionList = questionService.getQuestionList(
+				pageModel, qf);
+
+		String pageStr = PagingUtil.getPageBtnlink(page,
+				pageModel.getTotalPage());
+
+		List<Field> fieldList = questionService.getAllField(null);
+		model.addAttribute("fieldList", fieldList);
+
+		/*if(fieldList.size() > 0)
+			fieldId = fieldList.get(0).getFieldId();*/
+		model.addAttribute("knowledgeList",
+				questionService.getKnowledgePointByFieldId(fieldId,null));
+
+		model.addAttribute("questionTypeList",
+				questionService.getQuestionTypeList());
+
+		model.addAttribute("questionFilter", qf);
+		model.addAttribute("questionList", questionList);
+		model.addAttribute("pageStr", pageStr);
+		model.addAttribute("tagList", questionService.getTagByUserId(userInfo.getUserid(), null));
+		//保存筛选信息，删除后跳转页面时使用
+		model.addAttribute("fieldId", fieldId);
+		model.addAttribute("knowledge", knowledge);
+		model.addAttribute("questionType", questionType);
+		model.addAttribute("searchParam", searchParam);
+
+		return "manage-questions";
+	}
+
+	/**
+	 * 跳转试卷管理
+	 */
+	@RequestMapping(value = { "/to-manage-papers" }, method = RequestMethod.GET)
+	public String toManagePapers(Model model, HttpServletRequest request) {
+		this.appendBaseInfo(model);
+		return "redirect:paperfilter-0-1.html";
+	}
+
+	/**
+	 * 试卷列表
+	 */
+	@RequestMapping(value = "/paperfilter-{papertype}-{page}.html", method = RequestMethod.GET)
+	public String exampaperListFilterPage(Model model,
+										  @PathVariable("papertype") String papertype,
+										  @PathVariable("page") int page) {
+
+		Page<ExamPaper> pageModel = new Page<ExamPaper>();
+		pageModel.setPageNo(page);
+		pageModel.setPageSize(10);
+		List<ExamPaper> paper = examService.getExamPaperListByPaperType(
+				papertype, pageModel);
+		String pageStr = PagingUtil.getPageBtnlink(page,
+				pageModel.getTotalPage());
+		model.addAttribute("papertype", papertype);
+		model.addAttribute("paper", paper);
+		model.addAttribute("pageStr", pageStr);
+		return "manage-papers";
+	}
+
+	/**
+	 * 成绩列表
+	 */
+	@RequestMapping(value = "/to-manage-results", method = RequestMethod.GET)
+	public String userExamHistPage(Model model, HttpServletRequest request){
+
+		UserInfo userInfo;
+		try {
+			userInfo = (UserInfo) SecurityContextHolder.getContext()
+					.getAuthentication()
+					.getPrincipal();
+		} catch (Exception e) {
+			return "login";
+		}
+
+		int index = 1;
+		if(request.getParameter("page") != null) {
+			index = Integer.parseInt(request.getParameter("page"));
+		}
+
+		Page<ExamHistory> pageModel = new Page<ExamHistory>();
+		//pageModel.setPageSize(1);
+		pageModel.setPageNo(index);
+		List<ExamHistory> hisList = examService.getUserExamHistoryListByUserId(userInfo.getUserid(),pageModel);
+		model.addAttribute("hisList", hisList);
+		String pageStr = PagingUtil.getPagelink(index, pageModel.getTotalPage(), "", "student/exam-his");
+		model.addAttribute("pageStr", pageStr);
+		return "manage-results";
+	}
+
+	public enum UserType {
+		admin, teacher, student;
+	}
+
+	
+	public void appendBaseInfo(Model model){
+		List<ExamPaper> historypaper = examService.getExamPaperList4Exam(1);
+		List<ExamPaper> practicepaper = examService.getExamPaperList4Exam(2);
+		List<ExamPaper> expertpaper = examService.getExamPaperList4Exam(3);
+		
+		
+		
+		Object userInfo = SecurityContextHolder.getContext()
+			    .getAuthentication()
+			    .getPrincipal();
+		List<KnowledgePoint> kl =null;
+		List<Integer> idList = new ArrayList<Integer>();
+		Map<String,List<QuestionImproveResult>> classifyMap = new HashMap<String,List<QuestionImproveResult>>();
+		int fieldId = questionService.getMinFieldId();
+		UserQuestionHistory history = new UserQuestionHistory();
+		if(userInfo instanceof String){
+			kl = questionService.getKnowledgePointByFieldId(fieldId,null);
+		}else{
+			List<KnowledgePoint> kpz = questionService.getKnowledgePointByFieldId(fieldId,null);
+			kl = questionService.getKnowledgePointByFieldId( ((UserInfo)userInfo).getFieldId(),null);
+			
+			kpz.addAll(kl);
+			kl = kpz;
+			history = questionService.getUserQuestionHistoryByUserId(((UserInfo)userInfo).getUserid());
+		}
+		for(KnowledgePoint klp : kl){
+			idList.add(klp.getPointId());
+		}
+		//错题对应的知识点
+		Map<String,Map<Integer,Integer>> wrongKnowledgeMap = new HashMap<String,Map<Integer,Integer>>();
+		List<QuestionImproveResult> questionImproveList = questionService.getQuestionImproveResultByQuestionPointIdList(idList);
+		Map<Integer,QuestionHistory> rightMap = new HashMap<Integer,QuestionHistory>();
+		Map<Integer,QuestionHistory> wrongMap = new HashMap<Integer,QuestionHistory>();
+		Map<Integer,QuestionHistory> otherMap = new HashMap<Integer,QuestionHistory>();
+		if(history != null){
+			if(history.getHistory() != null){
+				if(history.getHistory().containsKey(1))
+					rightMap = history.getHistory().get(1);
+				if(history.getHistory().containsKey(0))
+					wrongMap = history.getHistory().get(0);
+				if(history.getHistory().containsKey(-1))
+					otherMap = history.getHistory().get(-1);
+			}
+			
+		}
+		
+		if(wrongMap != null){
+			Iterator<Integer> it = wrongMap.keySet().iterator();
+			while(it.hasNext()){
+				int key = it.next();
+				for(KnowledgePoint klp : kl){
+					if(klp.getPointId() == wrongMap.get(key).getPointId()){
+						Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+						if(wrongKnowledgeMap.containsKey(klp.getPointName())){
+							map = wrongKnowledgeMap.get(klp.getPointName());
+						} else {
+							map.put(klp.getPointId(), 0);
+						}
+						map.put(klp.getPointId(), map.get(klp.getPointId()) + 1);
+						wrongKnowledgeMap.put(klp.getPointName(), map);
+					}
+						
+				}
+			}
+			
+		}
+		for(QuestionImproveResult qir : questionImproveList){
+			List<QuestionImproveResult> tmpList = new ArrayList<QuestionImproveResult>();
+			if(classifyMap.containsKey(qir.getQuestionPointName()))
+				tmpList = classifyMap.get(qir.getQuestionPointName());
+			else 
+				tmpList = new ArrayList<QuestionImproveResult>();
+			//错题总数和对题总数处理
+			
+			if(rightMap == null)
+				qir.setRightTimes(0);
+			else{
+				Iterator<Integer> rightIt = rightMap.keySet().iterator();
+				//客观题默认是正确的
+				Iterator<Integer> otherIt = otherMap.keySet().iterator();
+				int rightCount = 0;
+				while(rightIt.hasNext()){
+					int key = rightIt.next();
+					QuestionHistory qh = rightMap.get(key);
+					if(qh.getPointId() == qir.getQuestionPointId() && qh.getQuestionTypeId() == qir.getQuestionTypeId())
+						rightCount ++;
+				}
+				while(otherIt.hasNext()){
+					int key = otherIt.next();
+					QuestionHistory qh = otherMap.get(key);
+					if(qh.getPointId() == qir.getQuestionPointId() && qh.getQuestionTypeId() == qir.getQuestionTypeId())
+						rightCount ++;
+				}
+				qir.setRightTimes(rightCount);
+			}
+			if(wrongMap == null)
+				qir.setWrongTimes(0);
+			else{
+				Iterator<Integer> wrongIt = wrongMap.keySet().iterator();
+				int wrongCount = 0;
+				while(wrongIt.hasNext()){
+					int key = wrongIt.next();
+					QuestionHistory qh = wrongMap.get(key);
+					if(qh.getPointId() == qir.getQuestionPointId() && qh.getQuestionTypeId() == qir.getQuestionTypeId())
+						wrongCount ++;
+					
+				}
+				qir.setWrongTimes(wrongCount);
+			}
+			tmpList.add(qir);
+			classifyMap.put(qir.getQuestionPointName(), tmpList);
+		}
+		
+		
+		
+		model.addAttribute("classifyMap", classifyMap);
+		model.addAttribute("wrongKnowledgeMap", wrongKnowledgeMap);
+		model.addAttribute("historypaper", historypaper);
+		model.addAttribute("practicepaper", practicepaper);
+		model.addAttribute("expertpaper", expertpaper);
+		model.addAttribute("knowledgelist", kl);
+		
+	}
+}
+
+
+
+
+
+
+
+
