@@ -84,7 +84,7 @@ String basePath = request.getScheme() + "://"
 	<body>
 		<header>
 <%--			<div class="container">--%>
-				<div class="row" style="background-image: url(resources/images/bpic.png)">
+				<div class="row" style="background-image: url(resources/images/bpic.png); margin-right: 0">
 					<div class="col-xs-1">
 						<div class="logo">
 							<h1><a href="#"><img alt="" src="resources/images/blogo.png"></a></h1>
@@ -136,8 +136,8 @@ String basePath = request.getScheme() + "://"
 
 		<div style="margin-bottom: 100px;">
 <%--			<div class="container">--%>
-			<div class="row">
-				<div class="col-xs-2">
+<%--			<div class="row">--%>
+				<div class="col-xs-2" style="padding-left:0">
 					<ul class="nav default-sidenav">
 						<li class="active">
 							<a href="to-manage-results"> <i class="fa fa-list-ul"></i> 成绩查询 </a>
@@ -201,7 +201,7 @@ String basePath = request.getScheme() + "://"
 
 					</div>
 				</div>
-			</div>
+<%--			</div>--%>
 <%--			</div>--%>
 		</div>
 <%--		<footer>--%>

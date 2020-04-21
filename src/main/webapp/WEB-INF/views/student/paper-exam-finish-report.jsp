@@ -26,7 +26,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<body>
 		<header>
 		<%--			<div class="container">--%>
-		<div class="row" style="background-image: url(resources/images/bpic.png)">
+		<div class="row" style="background-image: url(resources/images/bpic.png); margin-right: 0">
 			<div class="col-xs-1">
 				<div class="logo">
 					<h1><a href="#"><img alt="" src="resources/images/blogo.png"></a></h1>
@@ -83,8 +83,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <%--			<div class="container" style="min-height:500px;">--%>
 
-				<div class="row">
-					<div class="col-xs-2">
+<%--				<div class="row">--%>
+					<div class="col-xs-2" style="padding-left:0">
 						<ul class="nav default-sidenav">
 							<li>
 								<a href="student/finish-exam/${examPaperId }"> <i class="fa fa-bar-chart-o"></i> 成绩报告 </a>
@@ -129,7 +129,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							</div>
 						</div>
 					</div>
-				</div>
+<%--				</div>--%>
 <%--			</div>--%>
 		</div>
 

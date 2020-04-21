@@ -47,7 +47,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<body>
 		<header>
 			<%--			<div class="container">--%>
-			<div class="row" style="background-image: url(resources/images/bpic.png)">
+			<div class="row" style="background-image: url(resources/images/bpic.png); margin-right: 0">
 				<div class="col-xs-1">
 					<div class="logo">
 						<h1><a href="#"><img alt="" src="resources/images/blogo.png"></a></h1>
