@@ -14,7 +14,7 @@ String basePath = request.getScheme() + "://"
 		<base href="<%=basePath%>">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Exam++ 登录系统</title>
+		<title>Exam++</title>
 		
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="keywords" content="">
@@ -39,48 +39,48 @@ String basePath = request.getScheme() + "://"
 					<h1><a href="#"><img alt="" src="resources/images/blogo.png"></a></h1>
 				</div>
 			</div>
-			<div id="login-info" style="margin-top: 12px; margin-right: 40px;">
-				<c:choose>
-					<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
-						<div id="login-info-user">
+<%--			<div id="login-info" style="margin-top: 12px; margin-right: 40px;">--%>
+<%--				<c:choose>--%>
+<%--					<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">--%>
+<%--						<div id="login-info-user">--%>
 
-							<a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account" target="_blank">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
-							<span>|</span>
-							<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>
-						</div>
-					</c:when>
-					<c:otherwise>
-						<a class="btn btn-primary" href="user-register">用户注册</a>
-						<a class="btn btn-success" href="user-login-page">登录</a>
-					</c:otherwise>
-				</c:choose>
-			</div>
+<%--							<a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
+<%--							<span>|</span>--%>
+<%--							<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>--%>
+<%--						</div>--%>
+<%--					</c:when>--%>
+<%--					<c:otherwise>--%>
+<%--						<a class="btn btn-primary" href="user-register">用户注册</a>--%>
+<%--						<a class="btn btn-success" href="user-login-page">登录</a>--%>
+<%--					</c:otherwise>--%>
+<%--				</c:choose>--%>
+<%--			</div>--%>
 		</div>
 		<%--			</div>--%>
 	</header>
 		<!-- Navigation bar starts -->
 
-		<div class="navbar bs-docs-nav" role="banner">
-<%--			<div class="container">--%>
-				<nav class="collapse navbar-collapse bs-navbar-collapse"
-				role="navigation">
-					<ul class="nav navbar-nav">
-						<li class="active">
-							<a href="home">教学资料</a>
-						</li>
-						<li>
-							<a href="to-practice-exam">模拟考试</a>
-						</li>
-						<li>
-							<a href="to-start-exam">正式考试</a>
-						</li>
-						<li>
-							<a href="to-manage">综合管理</a>
-						</li>
-					</ul>
-				</nav>
-<%--			</div>--%>
-		</div>
+<%--		<div class="navbar bs-docs-nav" role="banner">--%>
+<%--&lt;%&ndash;			<div class="container">&ndash;%&gt;--%>
+<%--				<nav class="collapse navbar-collapse bs-navbar-collapse"--%>
+<%--				role="navigation">--%>
+<%--					<ul class="nav navbar-nav">--%>
+<%--						<li class="active">--%>
+<%--							<a href="home">教学资料</a>--%>
+<%--						</li>--%>
+<%--						<li>--%>
+<%--							<a href="to-practice-exam">模拟考试</a>--%>
+<%--						</li>--%>
+<%--						<li>--%>
+<%--							<a href="to-start-exam">正式考试</a>--%>
+<%--						</li>--%>
+<%--						<li>--%>
+<%--							<a href="to-manage">综合管理</a>--%>
+<%--						</li>--%>
+<%--					</ul>--%>
+<%--				</nav>--%>
+<%--&lt;%&ndash;			</div>&ndash;%&gt;--%>
+<%--		</div>--%>
 
 		<!-- Navigation bar ends -->
 
@@ -123,7 +123,7 @@ String basePath = request.getScheme() + "://"
 										</div>
 									</div>
 								</form>
-								没有账号? <a href="user-register">注册</a>
+<%--								没有账号? <a href="user-register">注册</a>--%>
 							</div>
 						</div>
 
