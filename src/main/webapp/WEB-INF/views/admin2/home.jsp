@@ -68,13 +68,7 @@ String basePath = request.getScheme() + "://"
 							<a href="home">教学资料</a>
 						</li>
 						<li>
-							<a href="student/practice">模拟考试</a>
-						</li>
-						<li>
-							<a href="student/exam">正式考试</a>
-						</li>
-						<li>
-							<a href="student/result">综合管理</a>
+							<a href="admin/question">综合管理</a>
 						</li>
 					</ul>
 				</nav>

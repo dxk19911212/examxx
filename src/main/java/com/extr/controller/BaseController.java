@@ -51,40 +51,25 @@ public class BaseController {
 
 	/**
 	 * 网站首页
-	 * 
-	 * @param model
-	 * @param request
-	 * @return
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String homePage(Model model, HttpServletRequest request) {
-
+	public String home(Model model, HttpServletRequest request) {
 		return "redirect:home";
 	}
 
 	/**
-	 * 管理员登录
-	 * 
-	 * @param model
-	 * @param request
-	 * @return
+	 * 管理员入口
 	 */
 	@RequestMapping(value = { "/admin/home" }, method = RequestMethod.GET)
-	public String adminHomePage(Model model, HttpServletRequest request) {
-
-		return "redirect:/admin/question-list";
+	public String adminHome(Model model, HttpServletRequest request) {
+		return "admin2/home";
 	}
 
 	/**
 	 * 判断不同角色返回的页面
-	 * @param model
-	 * @param request
-	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	@RequestMapping(value = { "home" }, method = RequestMethod.GET)
 	public String directToBaseHomePage(Model model, HttpServletRequest request) {
-
 		try {
 			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
 					.getAuthentication()
@@ -123,23 +108,10 @@ public class BaseController {
 	}
 
 	/**
-	 * 管理员登录
-	 *
-	 * @param model
-	 * @param request
-	 * @return
+	 * 跳转模拟考试（员工）
 	 */
-	@RequestMapping(value = { "/start-exam" }, method = RequestMethod.GET)
-	public String startExam(Model model, HttpServletRequest request) {
-		this.appendBaseInfo(model);
-		return "start-exam";
-	}
-	
-	/**
-	 * 跳转模拟考试
-	 */
-	@RequestMapping(value = { "/to-practice-exam" }, method = RequestMethod.GET)
-	public String toPracticeExam(Model model, HttpServletRequest request) {
+	@RequestMapping(value = { "/student/practice" }, method = RequestMethod.GET)
+	public String toPractice(Model model, HttpServletRequest request) {
 		try {
 			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
 					.getAuthentication()
@@ -148,14 +120,14 @@ public class BaseController {
 			return "login";
 		}
 		this.appendBaseInfo(model);
-		return "toPracticeExam";
+		return "student2/practice";
 	}
 
 	/**
-	 * 跳转正式考试
+	 * 跳转正式考试（员工）
 	 */
-	@RequestMapping(value = { "/to-start-exam" }, method = RequestMethod.GET)
-	public String toStartExam(Model model, HttpServletRequest request) {
+	@RequestMapping(value = { "/student/exam" }, method = RequestMethod.GET)
+	public String toExam(Model model, HttpServletRequest request) {
 		try {
 			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
 					.getAuthentication()
@@ -164,22 +136,61 @@ public class BaseController {
 			return "login";
 		}
 		this.appendBaseInfo(model);
-		return "toStartExam";
+		return "student2/exam";
 	}
 
 	/**
-	 * 跳转试题管理
+	 * 成绩列表
 	 */
-	@RequestMapping(value = { "/to-manage" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/student/result", method = RequestMethod.GET)
+	public String studentResult(Model model, HttpServletRequest request){
+
+		UserInfo userInfo;
+		try {
+			userInfo = (UserInfo) SecurityContextHolder.getContext()
+					.getAuthentication()
+					.getPrincipal();
+		} catch (Exception e) {
+			return "login";
+		}
+
+		int index = 1;
+		if(request.getParameter("page") != null) {
+			index = Integer.parseInt(request.getParameter("page"));
+		}
+
+		Page<ExamHistory> pageModel = new Page<ExamHistory>();
+		//pageModel.setPageSize(1);
+		pageModel.setPageNo(index);
+		List<ExamHistory> hisList = examService.getUserExamHistoryListByUserId(userInfo.getUserid(),pageModel);
+		model.addAttribute("hisList", hisList);
+		String pageStr = PagingUtil.getPagelink(index, pageModel.getTotalPage(), "", "student/exam-his");
+		model.addAttribute("pageStr", pageStr);
+		return "student2/result";
+	}
+
+	/**
+	 * 用户信息查看
+	 */
+	@RequestMapping(value = { "/student/info/{username}" }, method = RequestMethod.GET)
+	public String studentInfo(@PathVariable String username, Model model) {
+		model.addAttribute("username", username);
+		return "redirect:/student/usercenter";
+	}
+
+	/**
+	 * 跳转试题管理（管理员）
+	 */
+	@RequestMapping(value = { "/admin/question" }, method = RequestMethod.GET)
 	public String toManage(Model model, HttpServletRequest request) {
 		this.appendBaseInfo(model);
-		return "redirect:questionfilter-0-0-0-0-1.html";
+		return "redirect:question-0-0-0-0-1.html";
 	}
 
 	/**
 	 * 试题列表
 	 */
-	@RequestMapping(value = "/questionfilter-{fieldId}-{knowledge}-{questionType}-{searchParam}-{page}.html", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/question-{fieldId}-{knowledge}-{questionType}-{searchParam}-{page}.html", method = RequestMethod.GET)
 	public String questionListFilterPage(Model model,
 										 @PathVariable("fieldId") int fieldId,
 										 @PathVariable("knowledge") int knowledge,
@@ -236,22 +247,22 @@ public class BaseController {
 		model.addAttribute("questionType", questionType);
 		model.addAttribute("searchParam", searchParam);
 
-		return "manage-questions";
+		return "admin2/question";
 	}
 
 	/**
-	 * 跳转试卷管理
+	 * 跳转试卷管理（管理员）
 	 */
-	@RequestMapping(value = { "/to-manage-papers" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/admin/paper" }, method = RequestMethod.GET)
 	public String toManagePapers(Model model, HttpServletRequest request) {
 		this.appendBaseInfo(model);
-		return "redirect:paperfilter-0-1.html";
+		return "redirect:paper-0-1.html";
 	}
 
 	/**
 	 * 试卷列表
 	 */
-	@RequestMapping(value = "/paperfilter-{papertype}-{page}.html", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/paper-{papertype}-{page}.html", method = RequestMethod.GET)
 	public String exampaperListFilterPage(Model model,
 										  @PathVariable("papertype") String papertype,
 										  @PathVariable("page") int page) {
@@ -266,37 +277,7 @@ public class BaseController {
 		model.addAttribute("papertype", papertype);
 		model.addAttribute("paper", paper);
 		model.addAttribute("pageStr", pageStr);
-		return "manage-papers";
-	}
-
-	/**
-	 * 成绩列表
-	 */
-	@RequestMapping(value = "/to-manage-results", method = RequestMethod.GET)
-	public String userExamHistPage(Model model, HttpServletRequest request){
-
-		UserInfo userInfo;
-		try {
-			userInfo = (UserInfo) SecurityContextHolder.getContext()
-					.getAuthentication()
-					.getPrincipal();
-		} catch (Exception e) {
-			return "login";
-		}
-
-		int index = 1;
-		if(request.getParameter("page") != null) {
-			index = Integer.parseInt(request.getParameter("page"));
-		}
-
-		Page<ExamHistory> pageModel = new Page<ExamHistory>();
-		//pageModel.setPageSize(1);
-		pageModel.setPageNo(index);
-		List<ExamHistory> hisList = examService.getUserExamHistoryListByUserId(userInfo.getUserid(),pageModel);
-		model.addAttribute("hisList", hisList);
-		String pageStr = PagingUtil.getPagelink(index, pageModel.getTotalPage(), "", "student/exam-his");
-		model.addAttribute("pageStr", pageStr);
-		return "manage-results";
+		return "admin2/paper";
 	}
 
 	public enum UserType {

@@ -95,7 +95,8 @@ String basePath = request.getScheme() + "://"
 							<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 								<div id="login-info-user">
 
-									<a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
+									<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
+									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 									<span>|</span>
 									<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>
 								</div>
@@ -119,14 +120,8 @@ String basePath = request.getScheme() + "://"
 						<li>
 							<a href="home">教学资料</a>
 						</li>
-						<li>
-							<a href="to-practice-exam">模拟考试</a>
-						</li>
-						<li>
-							<a href="to-start-exam">正式考试</a>
-						</li>
 						<li class="active">
-							<a href="to-manage">综合管理</a>
+							<a href="admin/question">综合管理</a>
 						</li>
 					</ul>
 				</nav>
@@ -140,13 +135,13 @@ String basePath = request.getScheme() + "://"
 				<div class="col-xs-2" style="padding-left:0">
 					<ul class="nav default-sidenav">
 						<li>
-							<a href="to-manage-results"> <i class="fa fa-list-ul"></i> 成绩查询 </a>
-						</li>
-						<li>
-							<a href="to-manage"> <i class="fa fa-list-ul"></i> 试题管理 </a>
+							<a href="admin/question"> <i class="fa fa-list-ul"></i> 试题管理 </a>
 						</li>
 						<li class="active">
-							<a href="to-manage-papers"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
+							<a href="admin/paper"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
+						</li>
+						<li>
+							<a href="#"> <i class="fa fa-list-ul"></i> 资料上传 </a>
 						</li>
 <%--						<li class="active">--%>
 <%--							<a href="admin/exampaper-list"> <i class="fa fa-list-ul"></i> 试卷管理 </a>--%>

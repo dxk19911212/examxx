@@ -95,7 +95,8 @@ String basePath = request.getScheme() + "://"
 							<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 								<div id="login-info-user">
 
-									<a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
+									<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
+									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 									<span>|</span>
 									<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>
 								</div>
@@ -118,14 +119,8 @@ String basePath = request.getScheme() + "://"
 						<li>
 							<a href="home">教学资料</a>
 						</li>
-						<li>
-							<a href="to-practice-exam">模拟考试</a>
-						</li>
-						<li>
-							<a href="to-start-exam">正式考试</a>
-						</li>
 						<li class="active">
-							<a href="to-manage">综合管理</a>
+							<a href="admin/question">综合管理</a>
 						</li>
 					</ul>
 				</nav>
@@ -138,14 +133,14 @@ String basePath = request.getScheme() + "://"
 <%--				<div class="row">--%>
 					<div class="col-xs-2" style="padding-left:0">
 						<ul class="nav default-sidenav" style="border-right: 1px solid #666;">
-							<li>
-								<a href="to-manage-results"> <i class="fa fa-list-ul"></i> 成绩查询 </a>
-							</li>
 							<li class="active">
-								<a href="to-manage"> <i class="fa fa-list-ul"></i> 试题管理 </a>
+								<a href="admin/question"> <i class="fa fa-list-ul"></i> 试题管理 </a>
 							</li>
 							<li>
-								<a href="to-manage-papers"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
+								<a href="admin/paper"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
+							</li>
+							<li>
+								<a href=""> <i class="fa fa-list-ul"></i> 资料上传 </a>
 							</li>
 <%--							<li>--%>
 <%--								<a href="admin/question-add"> <i class="fa fa-pencil-square-o"></i> 添加试题 </a>--%>
@@ -172,32 +167,31 @@ String basePath = request.getScheme() + "://"
 <%--										<input type="text" class="form-control" placeholder="Search">--%>
 									</dd>
 								</dl>
-<%--								<dl id="question-filter-field">--%>
-<%--									<dt>--%>
-<%--										题库：--%>
-<%--									</dt>--%>
-<%--									<dd>--%>
-<%--										<c:choose>--%>
-<%--											<c:when test="${questionFilter.fieldId == 0 }">--%>
-<%--												<span data-id="0" class="label label-info">全部</span>--%>
-<%--											</c:when>--%>
-<%--											<c:otherwise>--%>
-<%--												<span data-id="0">全部</span>--%>
-<%--											</c:otherwise>--%>
-<%--										</c:choose>--%>
-<%--										<c:forEach items="${fieldList}" var="field">--%>
-<%--											<c:choose>--%>
-<%--												<c:when test="${questionFilter.fieldId == field.fieldId }">--%>
-<%--													<span class="label label-info" data-id="${field.fieldId}">${field.fieldName}</span>--%>
-<%--												</c:when>--%>
-<%--												<c:otherwise>--%>
-<%--													<span data-id="${field.fieldId}">${field.fieldName}</span>--%>
-<%--												</c:otherwise>--%>
-<%--											</c:choose>--%>
-<%--										</c:forEach>--%>
-<%--									</dd>--%>
-<%--								</dl>--%>
-
+								<dl id="question-filter-field">
+									<dt>
+										题库：
+									</dt>
+									<dd>
+										<c:choose>
+											<c:when test="${questionFilter.fieldId == 0 }">
+												<span data-id="0" class="label label-info">全部</span>
+											</c:when>
+											<c:otherwise>
+												<span data-id="0">全部</span>
+											</c:otherwise>
+										</c:choose>
+										<c:forEach items="${fieldList}" var="field">
+											<c:choose>
+												<c:when test="${questionFilter.fieldId == field.fieldId }">
+													<span class="label label-info" data-id="${field.fieldId}">${field.fieldName}</span>
+												</c:when>
+												<c:otherwise>
+													<span data-id="${field.fieldId}">${field.fieldName}</span>
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+									</dd>
+								</dl>
 								<dl id="question-filter-qt">
 									<dt>
 										试题类型：
@@ -220,13 +214,9 @@ String basePath = request.getScheme() + "://"
 													<span data-id="${questionType.id}">${questionType.name}</span>
 												</c:otherwise>
 											</c:choose>
-
-
 										</c:forEach>
-
 									</dd>
 								</dl>
-
 								<dl id="question-filter-knowledge">
 									<dt>
 										知识分类：
@@ -265,7 +255,14 @@ String basePath = request.getScheme() + "://"
 								<table class="table-striped table">
 									<thead>
 									<tr>
-										<td></td><td>ID</td><td class="question-name-td" style="width:240px">试题名称</td><td style="width:80px">试题类型</td><td>专业</td><td>知识类</td><!-- <td>关键字</td> --><td>操作</td>
+										<td></td>
+										<td>ID</td>
+										<td class="question-name-td" style="width:240px">试题名称</td>
+										<td style="width:80px">试题类型</td>
+										<td>专业</td>
+										<td>知识类</td>
+										<!-- <td>关键字</td> -->
+										<td>操作</td>
 									</tr>
 									</thead>
 									<tbody>
@@ -286,6 +283,7 @@ String basePath = request.getScheme() + "://"
 												<%-- <td>${items.keyword }</td> --%>
 											<td style="width:50px;">
 												<a class="change-property">修改</a>
+												<a class="delete-property">删除</a>
 											</td>
 										</tr>
 									</c:forEach>
