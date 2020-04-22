@@ -1,6 +1,9 @@
 package com.extr.controller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.extr.controller.domain.QuestionFilter;
 import com.extr.controller.domain.QuestionImproveResult;
@@ -175,7 +180,7 @@ public class BaseController {
 	@RequestMapping(value = { "/student/info/{username}" }, method = RequestMethod.GET)
 	public String studentInfo(@PathVariable String username, Model model) {
 		model.addAttribute("username", username);
-		return "redirect:/student/usercenter";
+		return "student2/usercenter";
 	}
 
 	/**
@@ -408,6 +413,27 @@ public class BaseController {
 		model.addAttribute("knowledgelist", kl);
 		
 	}
+
+//	@RequestMapping(value="/upload-test", method=RequestMethod.POST)
+//	public String handleFileUpload(MultipartHttpServletRequest request){
+//		String filePath = "/Users/dxk/Downloads/file";
+//		Iterator<String> iterator = request.getFileNames();
+//
+//		while (iterator.hasNext()) {
+//			String fileName = iterator.next();
+//			MultipartFile multipartFile = request.getFile(fileName);
+//			try {
+//				File file = new File(filePath, multipartFile.getOriginalFilename());
+//				if (!file.getParentFile().exists()) {
+//					file.getParentFile().mkdirs();
+//				}
+//				multipartFile.transferTo(file);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return "";
+//	}
 }
 
 

@@ -10,12 +10,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<head>
 		<meta charset="utf-8" />
 		<base href="<%=basePath%>">
-
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		Remove this if you use the .htaccess -->
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Exam++</title>
+		<title>模拟考试</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" />
@@ -23,7 +20,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<link href="resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 		<link href="resources/css/exam.css" rel="stylesheet" type="text/css">
 		<link href="resources/css/style.css" rel="stylesheet">
-
 		<style>
 			.question-number{
 				color: #5cb85c;
@@ -35,13 +31,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 			.question-number-2{
 				color: #5bc0de;
-				font-weight: bolder;
-				display: inline-block;
-				width: 30px;
-				text-align: center;
-			}
-			.question-number-3{
-				color: #d9534f;
 				font-weight: bolder;
 				display: inline-block;
 				width: 30px;
@@ -85,8 +74,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 							<div id="login-info-user">
 
-								<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
-									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
+								<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 								<span>|</span>
 								<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>
 							</div>

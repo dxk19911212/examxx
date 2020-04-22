@@ -42,7 +42,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 								<div id="login-info-user">
 									
-									<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
 									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 									<span>|</span>
 									<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>
@@ -120,7 +119,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<h1><i class="fa fa-cloud-upload"></i> 导入试题 </h1>
 						</div>
 						<div class="page-content row">
-							<form id="from-question-import" action="admin/question-import">
+							<form id="question-import-form" action="admin/question-import">
 							<div class="form-line upload-question-group">
 								<span class="form-label">选择题库：</span>
 								<select class="df-input-narrow">

@@ -94,7 +94,6 @@ String basePath = request.getScheme() + "://"
 							<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 								<div id="login-info-user">
 									
-									<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
 									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 									<span>|</span>
 									<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>

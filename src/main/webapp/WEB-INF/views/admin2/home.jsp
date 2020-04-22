@@ -11,20 +11,15 @@ String basePath = request.getScheme() + "://"
 <html>
 	<head>
 		<base href="<%=basePath%>">
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		Remove this if you use the .htaccess -->
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Exam++</title>
-		<meta name="viewport"
-		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>在线考试系统-管理员</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="keywords" content="">
 		<link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" />
-		<link href="resources/bootstrap/css/bootstrap-huan.css"
-		rel="stylesheet">
-		<link href="resources/font-awesome/css/font-awesome.min.css"
-		rel="stylesheet">
+		<link href="resources/bootstrap/css/bootstrap-huan.css" rel="stylesheet">
+		<link href="resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 		<link href="resources/css/style.css" rel="stylesheet">
 	</head>
 
@@ -42,7 +37,6 @@ String basePath = request.getScheme() + "://"
 							<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 								<div id="login-info-user">
 
-									<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
 									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 									<span>|</span>
 									<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>

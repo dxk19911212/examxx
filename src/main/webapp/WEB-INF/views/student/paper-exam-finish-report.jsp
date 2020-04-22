@@ -11,7 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<base href="<%=basePath%>">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Exam++</title>
+		<title>正式考试-成绩报告</title>
 		
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="keywords" content="">
@@ -37,8 +37,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 						<div id="login-info-user">
 
-							<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
-									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
+							<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 							<span>|</span>
 							<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>
 						</div>

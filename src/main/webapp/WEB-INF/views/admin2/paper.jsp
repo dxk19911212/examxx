@@ -11,74 +11,22 @@ String basePath = request.getScheme() + "://"
 <html>
 	<head>
 		<base href="<%=basePath%>">
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		Remove this if you use the .htaccess -->
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Exam++</title>
-		<meta name="viewport"
-		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
+		<title>试题管理</title>
 		<meta name="keywords" content="">
 		<link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" />
-		<link href="resources/bootstrap/css/bootstrap-huan.css"
-		rel="stylesheet">
-		<link href="resources/font-awesome/css/font-awesome.min.css"
-		rel="stylesheet">
+		<link href="resources/bootstrap/css/bootstrap-huan.css" rel="stylesheet">
+		<link href="resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 		<link href="resources/css/style.css" rel="stylesheet">
 
+		<link href="resources/css/exam.css" rel="stylesheet">
+		<link href="resources/chart/morris.css" rel="stylesheet">
 		<style>
-			.question-number{
-				color: #5cb85c;
-				font-weight: bolder;
-				display: inline-block;
-				width: 30px;
-				text-align: center;
-			}
-
-			.question-number-2{
-				color: #5bc0de;
-				font-weight: bolder;
-				display: inline-block;
-				width: 30px;
-				text-align: center;
-			}
-			.question-number-3{
-				color: #d9534f;
-				font-weight: bolder;
-				display: inline-block;
-				width: 30px;
-				text-align: center;
-			}
-
-			a.join-practice-btn{
-				margin:0;
-				margin-left:20px;
-			}
-
-			.content ul.question-list-knowledge{
-				padding:8px 20px;
-			}
-
-			.knowledge-title{
-				background-color:#EEE;
-				padding:2px 10px;
-				margin-bottom:20px;
+			.change-property, .publish-paper, .delete-paper, .offline-paper{
 				cursor:pointer;
-				border:1px solid #FFF;
-				border-radius:4px;
-			}
-
-			.knowledge-title-name{
-				margin-left:8px;
-			}
-
-			.point-name{
-				width:200px;
-				display:inline-block;
 			}
 		</style>
-
 	</head>
 
 	<body>
@@ -95,7 +43,6 @@ String basePath = request.getScheme() + "://"
 							<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 								<div id="login-info-user">
 
-									<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
 									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 									<span>|</span>
 									<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>
@@ -130,29 +77,20 @@ String basePath = request.getScheme() + "://"
 		<!-- Navigation bar ends -->
 
 		<div style="margin-bottom: 100px;">
-<%--			<div class="container">--%>
-<%--			<div class="row">--%>
-				<div class="col-xs-2" style="padding-left:0">
-					<ul class="nav default-sidenav">
-						<li>
-							<a href="admin/question"> <i class="fa fa-list-ul"></i> 试题管理 </a>
-						</li>
-						<li class="active">
-							<a href="admin/paper"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
-						</li>
-						<li>
-							<a href="#"> <i class="fa fa-list-ul"></i> 资料上传 </a>
-						</li>
-<%--						<li class="active">--%>
-<%--							<a href="admin/exampaper-list"> <i class="fa fa-list-ul"></i> 试卷管理 </a>--%>
-<%--						</li>--%>
-<%--						<li>--%>
-<%--							<a href="admin/exampaper-add"> <i class="fa fa-file-text-o"></i> 创建新试卷 </a>--%>
-<%--						</li>--%>
-					</ul>
-
-				</div>
-				<div class="col-xs-10">
+			<div class="col-xs-2" style="padding-left:0">
+				<ul class="nav default-sidenav">
+					<li>
+						<a href="admin/question"> <i class="fa fa-list-ul"></i> 试题管理 </a>
+					</li>
+					<li class="active">
+						<a href="admin/paper"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
+					</li>
+					<li>
+						<a href="#"> <i class="fa fa-list-ul"></i> 资料上传 </a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-xs-10">
 <%--					<div class="page-header">--%>
 <%--						<h1><i class="fa fa-list-ul"></i> 试卷管理 </h1>--%>
 <%--					</div>--%>
@@ -185,6 +123,9 @@ String basePath = request.getScheme() + "://"
 <%--							<div class="page-link-content">--%>
 <%--								<ul class="pagination pagination-sm">${pageStr}</ul>--%>
 <%--							</div>--%>
+						</div>
+						<div class="col-md-10">
+							<a class="btn btn-primary" href="admin/exampaper-add">添加试卷</a>
 						</div>
 						<div id="question-list">
 							<table class="table-striped table">
@@ -252,6 +193,7 @@ String basePath = request.getScheme() + "://"
 
 								</tbody><tfoot></tfoot>
 							</table>
+							<!-- 修改属性modal -->
 							<div class="modal fade" id="change-property-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 								<div class="modal-dialog">
 									<div class="modal-content">
@@ -268,7 +210,7 @@ String basePath = request.getScheme() + "://"
 													<span class="form-message"></span>
 												</div>
 												<div class="form-line add-update-duration">
-													<span class="form-label"><span class="warning-label">*</span>时长（分钟）：</span>
+													<span class="form-label"><span class="warning-label">*</span>时长(分钟)：</span>
 													<input type="text" class="df-input-narrow">
 													<span class="form-message"></span>
 												</div>
@@ -294,11 +236,8 @@ String basePath = request.getScheme() + "://"
 						<div class="page-link-content">
 							<ul class="pagination pagination-sm">${pageStr}</ul>
 						</div>
-
 					</div>
 				</div>
-<%--			</div>--%>
-<%--			</div>--%>
 		</div>
 <%--		<footer>--%>
 <%--			<div class="container">--%>

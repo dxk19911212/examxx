@@ -68,14 +68,14 @@ public class ExamPaperController {
 		model.addAttribute("papertype", papertype);
 		model.addAttribute("paper", paper);
 		model.addAttribute("pageStr", pageStr);
-		return "admin/exampaper-list";
+		return "admin2/paper";
 	}
 
 	@RequestMapping(value = "/admin/exampaper-add", method = RequestMethod.GET)
 	public String exampaperAddPage(Model model) {
 		List<Field> fieldList = questionService.getAllField(null);
 		model.addAttribute("fieldList", fieldList);
-		return "admin/exampaper-add";
+		return "admin2/paper-add";
 	}
 
 	@RequestMapping(value = "/admin/exampaper-edit/{exampaperid}", method = RequestMethod.GET)
@@ -102,7 +102,7 @@ public class ExamPaperController {
 		model.addAttribute("htmlStr", sb);
 		model.addAttribute("exampaperid", exampaperid);
 		model.addAttribute("exampapername", examPaper.getName());
-		return "admin/exampaper-edit";
+		return "admin2/paper-edit";
 	}
 
 	@RequestMapping(value = "/admin/update-exampaper/{exampaperid}", method = RequestMethod.POST)
@@ -212,7 +212,7 @@ public class ExamPaperController {
 	public @ResponseBody Message updateExamPaper(@RequestBody ExamPaper examPaper){
 		
 		Message message = new Message();
-		examPaper.setStatus(-1);
+//		examPaper.setStatus(-1);
 		try{
 			examService.updateExamPaper(examPaper);
 			message.setObject(examPaper);
@@ -248,7 +248,7 @@ public class ExamPaperController {
 		model.addAttribute("htmlStr", sb);
 		model.addAttribute("exampaperid", exampaperid);
 		model.addAttribute("exampapername", examPaper.getName());
-		return "admin/exampaper-preview";
+		return "admin2/paper-preview";
 	}
 	
 	@RequestMapping(value = "admin/paper-delete", method = RequestMethod.POST)

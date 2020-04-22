@@ -92,7 +92,7 @@ public class UserController {
 	@RequestMapping(value = { "/user-detail/{username}" }, method = RequestMethod.GET)
 	public String userDetailPage(@PathVariable String username, Model model) {
 		model.addAttribute("username", username);
-		return "redirect:/student/usercenter";
+		return "student2/usercenter";
 	}
 
 	/**

@@ -170,7 +170,7 @@ public class QuestionController {
 		model.addAttribute("questionType", questionType);
 		model.addAttribute("searchParam", searchParam);
 
-		return "admin/question-list-dialog";
+		return "admin2/question-dialog";
 	}
 
 	/**
@@ -272,9 +272,9 @@ public class QuestionController {
 		String strHtml = adapter.getStringFromXML(true, false, true);
 		model.addAttribute("strHtml", strHtml);
 		model.addAttribute("question", question);
-		return "admin/question-preview";
+		return "admin2/question-preview";
 	}
-	
+
 	@RequestMapping(value = "/admin/upload-uploadify-img", method = RequestMethod.POST)
 	public @ResponseBody String uploadImg(HttpServletRequest request, HttpServletResponse response){
 		UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()

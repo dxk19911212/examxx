@@ -8,8 +8,7 @@ var question_import={
 			this.questionDataProcess();
 		},
 		prepareUploadify : function prepareUploadify(){
-			setTimeout(function(){
-				$("#uploadify").uploadify({
+			$("#uploadify-excel").uploadify({
 			    	'debug'	 : false,
 					'buttonText'	: '点击上传附件',
 					'buttonCursor'	: 'pointer',
@@ -28,7 +27,7 @@ var question_import={
 					onUploadComplete: function(file) {
 					},
 					onUploadSuccess : function(file, data, response) {  
-						$('#div-file-list').html('<a class=\'file-name\'>' 
+						$('#div-file-list').html('<a class=\'file-name\'>'
 								+ file.name 
 								+ '</a><input type=\'hidden\' value=\'' 
 								+ file.name + '\' />');
@@ -43,18 +42,19 @@ var question_import={
 						util.error(errorMsg);
 					}
 			    });
-			},2);
 		},
 		questionDataProcess : function questionDataProcess(){
-			$("#from-question-import").submit(function(){
+			$("#question-import-form").submit(function(){
 				var filePath = $("#div-file-list").find("input").val();
+				console.log(filePath)
+
 				$.ajax({
 					headers : {
 						'Accept' : 'application/json',
 						'Content-Type' : 'application/json'
 					},
 					type : "POST",
-					url : $("#from-question-import").attr("action") + "/" + $(".upload-question-group select").val(),
+					url : 'admin/question-import/' + $(".upload-question-group select").val(),
 					data : filePath,
 					success : function(message, tst, jqXHR) {
 						if (!util.checkSessionOut(jqXHR))

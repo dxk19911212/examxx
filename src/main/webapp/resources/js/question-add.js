@@ -56,7 +56,7 @@ question_add = {
 							return false;
 						if (message.result == "success") {
 							util.success("添加成功", function() {
-								document.location.href = document.getElementsByTagName('base')[0].href + 'admin/question-list';
+								document.location.href = document.getElementsByTagName('base')[0].href + 'admin/question';
 							});
 						} else {
 							util.error("操作失败请稍后尝试");

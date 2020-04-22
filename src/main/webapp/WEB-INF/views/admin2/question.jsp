@@ -11,74 +11,43 @@ String basePath = request.getScheme() + "://"
 <html>
 	<head>
 		<base href="<%=basePath%>">
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		Remove this if you use the .htaccess -->
+
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Exam++</title>
-		<meta name="viewport"
-		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
+		<title>试题管理</title>
 		<meta name="keywords" content="">
 		<link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" />
-		<link href="resources/bootstrap/css/bootstrap-huan.css"
-		rel="stylesheet">
-		<link href="resources/font-awesome/css/font-awesome.min.css"
-		rel="stylesheet">
+		<link href="resources/bootstrap/css/bootstrap-huan.css" rel="stylesheet">
+		<link href="resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 		<link href="resources/css/style.css" rel="stylesheet">
 
+		<link href="resources/css/question-add.css" rel="stylesheet">
+		<link href="resources/css/exam.css" rel="stylesheet">
+		<link href="resources/chart/morris.css" rel="stylesheet">
+		<link href="resources/css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" type="text/css" />
 		<style>
-			.question-number{
-				color: #5cb85c;
-				font-weight: bolder;
-				display: inline-block;
-				width: 30px;
-				text-align: center;
+			.examing-point{
+				display:block;
+				font-size:10px;
+				margin-top:5px;
 			}
-
-			.question-number-2{
-				color: #5bc0de;
-				font-weight: bolder;
-				display: inline-block;
-				width: 30px;
-				text-align: center;
+			.question-name-td{
+				width:300px;
 			}
-			.question-number-3{
-				color: #d9534f;
-				font-weight: bolder;
-				display: inline-block;
-				width: 30px;
-				text-align: center;
-			}
-
-			a.join-practice-btn{
-				margin:0;
-				margin-left:20px;
-			}
-
-			.content ul.question-list-knowledge{
-				padding:8px 20px;
-			}
-
-			.knowledge-title{
-				background-color:#EEE;
-				padding:2px 10px;
-				margin-bottom:20px;
+			.change-property, .delete-question, .add-tag-btn{
 				cursor:pointer;
-				border:1px solid #FFF;
-				border-radius:4px;
 			}
-
-			.knowledge-title-name{
-				margin-left:8px;
+			span.add-img{
+				text-decoration: underline;
+				cursor:pointer;
 			}
-
-			.point-name{
-				width:200px;
-				display:inline-block;
+			span.add-img:hover{
+				text-decoration: underline;
+			}
+			.add-content-img{
+				display:block;
 			}
 		</style>
-
 	</head>
 
 	<body>
@@ -95,7 +64,6 @@ String basePath = request.getScheme() + "://"
 							<c:when test="${not empty sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
 								<div id="login-info-user">
 
-									<%-- <a href="user-detail/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>--%>
 									<a href="#" id="system-info-account">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}</a>
 									<span>|</span>
 									<a href="j_spring_security_logout"><i class="fa fa-sign-out"></i> 退出</a>
@@ -142,12 +110,6 @@ String basePath = request.getScheme() + "://"
 							<li>
 								<a href=""> <i class="fa fa-list-ul"></i> 资料上传 </a>
 							</li>
-<%--							<li>--%>
-<%--								<a href="admin/question-add"> <i class="fa fa-pencil-square-o"></i> 添加试题 </a>--%>
-<%--							</li>--%>
-<%--							<li>--%>
-<%--								<a href="admin/question-import"> <i class="fa fa-cloud-upload"></i> 导入试题 </a>--%>
-<%--							</li>--%>
 						</ul>
 					</div>
 
@@ -158,15 +120,6 @@ String basePath = request.getScheme() + "://"
 						<div class="page-content row">
 
 							<div id="question-filter">
-
-								<dl id="question-filter-title">
-									<dt>
-										试题题目：
-									</dt>
-									<dd>
-<%--										<input type="text" class="form-control" placeholder="Search">--%>
-									</dd>
-								</dl>
 								<dl id="question-filter-field">
 									<dt>
 										题库：
@@ -242,10 +195,23 @@ String basePath = request.getScheme() + "://"
 										</c:forEach>
 									</dd>
 								</dl>
-
-<%--								<div class="page-link-content">--%>
-<%--									<ul class="pagination pagination-sm">${pageStr}</ul>--%>
-<%--								</div>--%>
+								<dl id="question-filter-title">
+									<dt>
+										试题题目：
+									</dt>
+									<dd>
+										<div class="col-md-4">
+											<input id="question-filter-title-input" type="text" class="form-control" style="background-color: #ffffff">
+										</div>
+										<div class="col-md-4">
+											<a class="btn btn-primary">查询</a>
+										</div>
+									</dd>
+								</dl>
+							</div>
+							<div class="col-md-10">
+								<a class="btn btn-primary" data-toggle="modal" data-target=".question-add">添加试题</a>
+								<a class="btn btn-primary" data-toggle="modal" data-target=".question-import">导入试题</a>
 							</div>
 							<div id="question-list">
 								<input id="field-id-hidden" value="${fieldId }" type="hidden">
@@ -266,31 +232,31 @@ String basePath = request.getScheme() + "://"
 									</tr>
 									</thead>
 									<tbody>
-
 									<c:forEach items="${questionList }" var="items">
 										<tr>
 											<td>
 												<input type="checkbox" value="${items.id }">
-											</td><td>${items.id }</td>
+											</td>
+											<td>${items.id }</td>
 											<td>
 												<a href="admin/question-preview/${items.id }" target="_blank" title="预览">${items.name }</a>
 												<!-- 此处改成标签 -->
 												<span class="examing-point">${items.examingPoint} </span>
 											</td>
-
-
-											<td>${items.questionTypeName }</td><td>${items.fieldName }</td><td>${items.pointName }</td>
-												<%-- <td>${items.keyword }</td> --%>
+											<td>${items.questionTypeName }</td>
+											<td>${items.fieldName }</td>
+											<td>${items.pointName }</td>
+											<%-- <td>${items.keyword }</td> --%>
 											<td style="width:50px;">
 												<a class="change-property">修改</a>
-												<a class="delete-property">删除</a>
+												<a class="delete-question">删除</a>
 											</td>
 										</tr>
 									</c:forEach>
-
-
-									</tbody><tfoot></tfoot>
+									</tbody>
+									<tfoot></tfoot>
 								</table>
+								<!-- 修改试题modal-->
 								<div class="modal fade" id="change-property-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 									<div class="modal-dialog">
 										<div class="modal-content">
@@ -302,17 +268,17 @@ String basePath = request.getScheme() + "://"
 												<form id="question-edit-form">
 													<span id="add-update-questionid" style="display:none;"></span>
 
-													<div class="form-line exampaper-type" id="aq-course1">
+													<div class="form-line exampaper-type" id="aq-course3">
 														<span class="form-label"><span class="warning-label">*</span>专业：</span>
-														<select id="field-select" class="df-input-narrow">
+														<select class="df-input-narrow">
 															<c:forEach items="${fieldList}" var="field">
 																<option value="${field.fieldId}">${field.fieldName} </option>
 															</c:forEach>
 														</select><span class="form-message"></span>
 													</div>
-													<div class="form-line exampaper-type" id="aq-course2">
+													<div class="form-line exampaper-type" id="aq-course4">
 														<span class="form-label"><span class="warning-label">*</span>知识类：</span>
-														<select id="point-from-select" class="df-input-narrow">
+														<select class="df-input-narrow">
 															<c:forEach items="${knowledgeList}" var="item">
 																<option value="${item.pointId}">${item.pointName} </option>
 															</c:forEach>
@@ -344,6 +310,243 @@ String basePath = request.getScheme() + "://"
 								<ul class="pagination pagination-sm">${pageStr}</ul>
 							</div>
 
+							<!-- 添加试题modal-->
+							<div class="modal fade question-add" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h6 class="modal-title">添加试题</h6>
+										</div>
+										<div class="modal-body">
+<%--											<div class="col-xs-9">--%>
+												<div class="page-content row">
+													<form id="question-add-form" style="margin-right:40px;">
+														<div class="form-line question-type" id="question-type">
+															<span class="form-label"><span class="warning-label">*</span>试题类型：</span>
+															<select id="question-type-select" class="df-input-narrow">
+																<option value="1">单选题</option>
+																<option value="2">多选题</option>
+																<option value="3">判断题</option>
+																<option value="4">填空题</option>
+																<option value="5">简答题</option>
+																<option value="6">论述题</option>
+																<option value="7">分析题</option>
+															</select>
+															<span class="form-message"></span>
+														</div>
+														<div class="form-line question-knowledge">
+															<span class="form-label"><span class="warning-label">*</span>知识点：</span>
+															<div>
+																<div class="clearfix">
+																	<div id="aq-course1" style="padding:0px;float:left; width:48%;">
+																		<select id="field-select" class="df-input-narrow" size="4" style="width:100%;">
+																			<c:forEach items="${fieldList }" var="item">
+																				<option value="${item.fieldId }">${item.fieldName }</option>
+																			</c:forEach>
+																		</select>
+																	</div>
+																	<div id="aq-course2" style="padding:0px; float:right;width:48%;">
+																		<select id="point-from-select" class="df-input-narrow" size="4"  style="width:100%;">
+																		</select>
+																	</div>
+																</div>
+
+																<div style="text-align:center;margin:10px 0;">
+																	<button id="add-point-btn" class="btn btn-primary btn-xs">选择知识点</button>
+																	<button id="del-point-btn" class="btn btn-danger btn-xs">删除知识点</button>
+																	<button id="remove-all-point-btn" class="btn btn-warning btn-xs">清除列表</button>
+																</div>
+																<div  id="kn-selected" style="padding-left:0px;text-align:center;margin-bottom:20px;">
+																	<select id="point-to-select" class="df-input-narrow" size="4"  style="width:80%;">
+																	</select>
+																	<p style="font-size:12px;color:#AAA;">您可以从上面选择4个知识点</p>
+																</div>
+															</div>
+															<span class="form-message"></span>
+														</div>
+														<div class="form-line question-content">
+															<span class="form-label"><span class="warning-label">*</span>试题内容：</span>
+															<textarea class="add-question-ta"></textarea>
+															<span class="add-img add-content-img" style="width:100px;">添加图片</span>
+															<span class="form-message"></span>
+														</div>
+														<div class="form-line form-question-opt" style="display: block;">
+															<span class="form-label"><span class="warning-label">*</span>选项：</span>
+															<div class="add-opt-items">
+																<span class="add-opt-item"><label class="que-opt-no">A</label>
+																	<input type="text" class="df-input-narrow form-question-opt-item">
+																	<span class="add-img add-opt-img">添加图片</span>
+																</span>
+																						<span class="add-opt-item"><label class="que-opt-no">B</label>
+																	<input type="text" class="df-input-narrow form-question-opt-item">
+																	<span class="add-img add-opt-img">添加图片</span>
+																</span>
+																						<span class="add-opt-item"><label class="que-opt-no">C</label>
+																	<input type="text" class="df-input-narrow form-question-opt-item">
+																	<span class="add-img add-opt-img">添加图片</span> <span><i class="small-icon ques-remove-opt fa fa-minus-square" title="删除此选项"></i></span>
+																</span>
+																						<span class="add-opt-item"><label class="que-opt-no">D</label>
+																	<input type="text" class="df-input-narrow form-question-opt-item">
+																	<span class="add-img add-opt-img">添加图片</span> <span><i class="small-icon ques-remove-opt fa fa-minus-square" title="删除此选项"></i></span>
+																</span>
+															</div>
+															<!--	<div class="small-icon" id="ques-add-opt" title="娣诲姞閫夐」"></div>-->
+															<span id="ques-add-opt"><i class="small-icon fa fa-plus-square" title="添加选项"></i></span>
+															<br>
+															<span class="form-message"></span>
+														</div>
+														<div class="form-line form-question-answer1 correct-answer" style="display: block;">
+															<span class="form-label"><span class="warning-label">*</span>正确答案：</span>
+															<select class="df-input-narrow">
+																<option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+															</select><span class="form-message"></span>
+														</div>
+														<div class="form-line form-question-answer-muti correct-answer" style="display: none;">
+															<span class="form-label"><span class="warning-label">*</span>正确答案：</span>
+
+															<span class="muti-opt-item">
+																<input type="checkbox" value="A">
+																<label class="que-opt-no">A</label>
+																<br>
+															</span>
+															<span class="muti-opt-item">
+																<input type="checkbox" value="B">
+																<label class="que-opt-no">B</label>
+																<br>
+															</span>
+															<span class="muti-opt-item">
+																<input type="checkbox" value="C">
+																<label class="que-opt-no">C</label>
+																<br>
+															</span>
+															<span class="muti-opt-item">
+																<input type="checkbox" value="D">
+																<label class="que-opt-no">D</label>
+																<br>
+															</span>
+															<span class="form-message"></span>
+														</div>
+														<div class="form-line form-question-answer-boolean correct-answer" style="display: none;">
+															<span class="form-label"><span class="warning-label">*</span>正确答案：</span>
+															<select class="df-input-narrow">
+																<option value="T">正确</option>
+																<option value="F">错误</option>
+															</select><span class="form-message"></span>
+														</div>
+														<div class="form-line correct-answer form-question-answer-text" style="display: none;">
+															<span class="form-label form-question-answer-more"><span class="warning-label">*</span>参考答案：</span>
+															<textarea class="add-question-ta"></textarea>
+															<span class="form-message"></span>
+															<br>
+														</div>
+														<div class="form-line form-question-reference" style="display: block;">
+															<span class="form-label"><span class="warning-label"></span>来源：</span>
+															<input type="text" class="df-input-narrow"><span class="form-message"></span>
+															<br>
+														</div>
+														<div class="form-line form-question-examingpoint" style="display: block;">
+															<span class="form-label"><span class="warning-label"></span>考点：</span>
+															<input type="text" class="df-input-narrow"><span class="form-message"></span>
+															<br>
+														</div>
+														<div class="form-line form-question-keyword" style="display: block;">
+															<span class="form-label"><span class="warning-label"></span>关键字：</span>
+															<input type="text" class="df-input-narrow"><span class="form-message"></span>
+															<br>
+														</div>
+														<div class="form-line form-question-analysis" style="display: block;">
+															<span class="form-label"><span class="warning-label"></span>题目解析：</span>
+															<textarea class="add-question-ta"></textarea><span class="form-message"></span>
+															<br>
+														</div>
+														<div class="form-line">
+															<input id="btn-save" value="保存" type="submit" class="df-submit">
+														</div>
+													</form>
+												</div>
+<%--											</div>--%>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 导入试题modal-->
+							<div class="modal fade question-import"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h6 class="modal-title">导入试题</h6>
+										</div>
+										<div class="modal-body">
+											<div class="page-content row">
+												<form id="question-import-form">
+													<div class="form-line upload-question-group">
+														<span class="form-label">选择题库：</span>
+														<select class="df-input-narrow">
+															<option value="0">-- 请选择 --</option>
+															<c:forEach items="${fieldList }" var="item">
+																<option value="${item.fieldId }">${item.fieldName }</option>
+															</c:forEach>
+														</select>
+														<span class="form-message"></span>
+													</div>
+													<div class="form-line template-download">
+														<span class="form-label">下载模板：</span>
+														<a href="resources/template/question.xlsx" style="color:rgb(22,22,22);text-decoration: underline;">点击下载</a>
+													</div>
+													<div class="form-line control-group">
+														<span class="form-label"><span class="warning-label">*</span>上传文件：</span>
+														<div class="controls file-form-line">
+															<div>
+																<div id="div-file-list">
+																<input type="file" id="uploadify-excel" name="uploadify">
+																</div>
+															</div>
+															<span class="help-inline form-message"></span>
+														</div>
+													</div>
+													<div class="form-line">
+														<input value="提交" type="submit" class="df-submit">
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 图片上传modal-->
+							<div class="modal fade" id="question-upload-img">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">图片上传工具</h4>
+										</div>
+										<div class="modal-body">
+											<div id="add-question-img-dialog" title="图片上传工具">
+												<form>
+													<div class="form-line img-destination">
+														<span class="form-label">添加至：</span>
+														<label></label>
+														<input type="hidden" value=""/>
+													</div>
+													<div class="form-line add-update-quetstionfile">
+														<span class="form-label">上传图片：</span>
+<%--														<div id="div-file-list"></div>--%>
+<%--														<div class="form-line" id="uploadify"></div>--%>
+														<input type="file" id="uploadify-img" name="uploadify">
+														<span class="form-message">请上传png、jpg图片文件，且不能大于100KB。为了使得图片显示正常，请上传的图片长宽比例为2:1</span>
+													</div>
+												</form>
+											</div>
+										</div>
+
+									</div><!-- /.modal-content -->
+								</div><!-- /.modal-dialog -->
+							</div>
 						</div>
 					</div>
 <%--				</div>--%>
@@ -367,14 +570,17 @@ String basePath = request.getScheme() + "://"
 
 		<!-- Javascript files -->
 		<!-- jQuery -->
-		<script type="text/javascript"
-		src="resources/js/jquery/jquery-1.9.0.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery/jquery-1.9.0.min.js"></script>
+		<script type="text/javascript" src="resources/js/uploadify/jquery.uploadify3.1Fixed.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/js/uploadify/uploadify.css">
 		<!-- Bootstrap JS -->
-		<script type="text/javascript"
-		src="resources/bootstrap/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="resources/js/question-list.js"></script>
+		<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="resources/js/all.js"></script>
 		<script type="text/javascript" src="resources/js/field-2-point.js"></script>
+		<script type="text/javascript" src="resources/js/question-list.js"></script>
+		<script type="text/javascript" src="resources/js/question-add.js"></script>
+		<script type="text/javascript" src="resources/js/question-import.js"></script>
+		<script type="text/javascript" src="resources/js/question-upload-img.js"></script>
 		<script>
 			$(function(){
 				$(".change-property").click(function(){
@@ -435,6 +641,10 @@ String basePath = request.getScheme() + "://"
 					}
 				});
 
+				$(".q-label-list").on("click",".fa",function(){
+					$(this).parent().remove();
+				});
+
 				$("#update-exampaper-btn").click(function(){
 
 					if($("#point-from-select").val()==null||$("#point-from-select").val()==""){
@@ -477,11 +687,33 @@ String basePath = request.getScheme() + "://"
 					return false;
 				});
 
-				$(".q-label-list").on("click",".fa",function(){
-					$(this).parent().remove();
+				$(".delete-question").click(function(){
+					var result = confirm("确定删除吗？删除后将不可恢复");
+					var question_id =  $(this).parent().parent().find(":checkbox").val();
+					if(result == true){
+						jQuery.ajax({
+							headers : {
+								'Accept' : 'application/json',
+								'Content-Type' : 'application/json'
+							},
+							type : "GET",
+							url : 'admin/delete-question/' + question_id,
+							success : function(message,tst,jqXHR) {
+								if(!util.checkSessionOut(jqXHR))return false;
+								if (message.result == "success") {
+									util.success("删除成功！", function(){
+										window.location.reload();
+									});
+								} else {
+									util.error("操作失败请稍后尝试");
+								}
+							},
+							error : function(jqXHR, textStatus) {
+								util.error("操作失败请稍后尝试");
+							}
+						});
+					}
 				});
-
-
 			});
 		</script>
 	</body>
