@@ -388,6 +388,7 @@ question_add = {
 		return question_entity;
 	},
 
+	// 组装试题中的图片
 	composeContent : function composeContent() {
 		
 		var question_type_id = $(".question-type select").val();

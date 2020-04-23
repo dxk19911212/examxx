@@ -11,7 +11,7 @@ $(function(){
 					'Content-Type' : 'application/json'
 				},
 				type : "GET",
-				url : "admin/get-knowledge-point/" + selection.val(),
+				url : "admin/get-knowledge-point/" + a_selection.val(),
 				success : function(message,tst,jqXHR) {
 					if(!util.checkSessionOut(jqXHR))return false;
 					if (message.result == "success") {
@@ -36,7 +36,7 @@ $(function(){
 					   'Content-Type' : 'application/json'
 				   },
 				   type : "GET",
-				   url : "admin/get-knowledge-point/" + selection.val(),
+				   url : "admin/get-knowledge-point/" + b_selection.val(),
 				   success : function(message,tst,jqXHR) {
 					   if(!util.checkSessionOut(jqXHR))return false;
 					   if (message.result == "success") {

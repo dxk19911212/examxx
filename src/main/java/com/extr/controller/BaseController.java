@@ -1,8 +1,6 @@
 package com.extr.controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,11 +8,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,6 +52,9 @@ public class BaseController {
 	private UserService userService;
 	@Autowired
 	private QuestionService questionService;
+
+	@Value("${file.upload-path}")
+	private String filePath;
 
 	/**
 	 * 网站首页
@@ -105,7 +107,7 @@ public class BaseController {
 			return "redirect:teacher/home";
 		} else if (grantedAuthorities.contains(new GrantedAuthorityImpl("ROLE_STUDENT"))) {
 			this.appendBaseInfo(model);
-			
+
 			return "home";
 		} else {
 			return "home";
@@ -289,14 +291,14 @@ public class BaseController {
 		admin, teacher, student;
 	}
 
-	
+
 	public void appendBaseInfo(Model model){
 		List<ExamPaper> historypaper = examService.getExamPaperList4Exam(1);
 		List<ExamPaper> practicepaper = examService.getExamPaperList4Exam(2);
 		List<ExamPaper> expertpaper = examService.getExamPaperList4Exam(3);
-		
-		
-		
+
+
+
 		Object userInfo = SecurityContextHolder.getContext()
 			    .getAuthentication()
 			    .getPrincipal();
@@ -310,7 +312,7 @@ public class BaseController {
 		}else{
 			List<KnowledgePoint> kpz = questionService.getKnowledgePointByFieldId(fieldId,null);
 			kl = questionService.getKnowledgePointByFieldId( ((UserInfo)userInfo).getFieldId(),null);
-			
+
 			kpz.addAll(kl);
 			kl = kpz;
 			history = questionService.getUserQuestionHistoryByUserId(((UserInfo)userInfo).getUserid());
@@ -333,9 +335,9 @@ public class BaseController {
 				if(history.getHistory().containsKey(-1))
 					otherMap = history.getHistory().get(-1);
 			}
-			
+
 		}
-		
+
 		if(wrongMap != null){
 			Iterator<Integer> it = wrongMap.keySet().iterator();
 			while(it.hasNext()){
@@ -351,19 +353,19 @@ public class BaseController {
 						map.put(klp.getPointId(), map.get(klp.getPointId()) + 1);
 						wrongKnowledgeMap.put(klp.getPointName(), map);
 					}
-						
+
 				}
 			}
-			
+
 		}
 		for(QuestionImproveResult qir : questionImproveList){
 			List<QuestionImproveResult> tmpList = new ArrayList<QuestionImproveResult>();
 			if(classifyMap.containsKey(qir.getQuestionPointName()))
 				tmpList = classifyMap.get(qir.getQuestionPointName());
-			else 
+			else
 				tmpList = new ArrayList<QuestionImproveResult>();
 			//错题总数和对题总数处理
-			
+
 			if(rightMap == null)
 				qir.setRightTimes(0);
 			else{
@@ -395,45 +397,57 @@ public class BaseController {
 					QuestionHistory qh = wrongMap.get(key);
 					if(qh.getPointId() == qir.getQuestionPointId() && qh.getQuestionTypeId() == qir.getQuestionTypeId())
 						wrongCount ++;
-					
+
 				}
 				qir.setWrongTimes(wrongCount);
 			}
 			tmpList.add(qir);
 			classifyMap.put(qir.getQuestionPointName(), tmpList);
 		}
-		
-		
-		
+
+
+
 		model.addAttribute("classifyMap", classifyMap);
 		model.addAttribute("wrongKnowledgeMap", wrongKnowledgeMap);
 		model.addAttribute("historypaper", historypaper);
 		model.addAttribute("practicepaper", practicepaper);
 		model.addAttribute("expertpaper", expertpaper);
 		model.addAttribute("knowledgelist", kl);
-		
+
 	}
 
-//	@RequestMapping(value="/upload-test", method=RequestMethod.POST)
-//	public String handleFileUpload(MultipartHttpServletRequest request){
-//		String filePath = "/Users/dxk/Downloads/file";
-//		Iterator<String> iterator = request.getFileNames();
-//
-//		while (iterator.hasNext()) {
-//			String fileName = iterator.next();
-//			MultipartFile multipartFile = request.getFile(fileName);
-//			try {
-//				File file = new File(filePath, multipartFile.getOriginalFilename());
-//				if (!file.getParentFile().exists()) {
-//					file.getParentFile().mkdirs();
-//				}
-//				multipartFile.transferTo(file);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return "";
-//	}
+	/**
+	 * 上传图片
+	 */
+	@RequestMapping(value="/upload-img", method=RequestMethod.POST)
+    @ResponseBody
+	public String handleFileUpload(MultipartHttpServletRequest request){
+		Iterator<String> iterator = request.getFileNames();
+		String fileName = "";
+
+		while (iterator.hasNext()) {
+		MultipartFile multipartFile = request.getFile(iterator.next());
+		fileName = UUID.randomUUID() + "_" + multipartFile.getOriginalFilename();
+			try {
+				File file = new File(filePath, fileName);
+				if (!file.getParentFile().exists()) {
+					file.getParentFile().mkdirs();
+				}
+				multipartFile.transferTo(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return filePath + "/" + fileName;
+	}
+
+	/**
+	 * 资料上传
+	 */
+	@RequestMapping(value = { "/admin/upload-data" }, method = RequestMethod.GET)
+	public String adminDataUpload(Model model, HttpServletRequest request) {
+		return "admin2/data-upload";
+	}
 }
 
 

@@ -13,7 +13,7 @@ String basePath = request.getScheme() + "://"
 		<base href="<%=basePath%>">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>试题管理</title>
+		<title>试卷管理</title>
 		<meta name="keywords" content="">
 		<link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" />
 		<link href="resources/bootstrap/css/bootstrap-huan.css" rel="stylesheet">
@@ -86,7 +86,7 @@ String basePath = request.getScheme() + "://"
 						<a href="admin/paper"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
 					</li>
 					<li>
-						<a href="#"> <i class="fa fa-list-ul"></i> 资料上传 </a>
+						<a href="admin/upload-data"> <i class="fa fa-list-ul"></i> 资料上传 </a>
 					</li>
 				</ul>
 			</div>
@@ -131,7 +131,16 @@ String basePath = request.getScheme() + "://"
 							<table class="table-striped table">
 								<thead>
 								<tr>
-									<td></td><td>ID</td><td>试卷名称</td><td>时长</td><td>类别</td><td>创建人</td><td>状态</td><td>操作</td>
+									<td></td>
+									<td>ID</td>
+									<td>试卷名称</td>
+									<td>时长</td>
+									<td>开放时间</td>
+									<td>开放部门</td>
+									<td>警种</td>
+									<td>创建人</td>
+									<td>状态</td>
+									<td>操作</td>
 								</tr>
 								</thead>
 								<tbody>
@@ -143,23 +152,26 @@ String basePath = request.getScheme() + "://"
 										<td>${item.id }</td>
 										<td><a href="admin/exampaper-preview/${item.id }" target="_blank" title="预览" class="td-paper-name">${item.name }</a></td>
 										<td><span class="td-paper-duration">${item.duration}</span>分钟</td>
-										<td>
-											<c:if test="${item.paper_type == '1' }">
-																<span class="td-paper-type" data-id="${item.paper_type}">
-																	随机组卷
-																</span>
-											</c:if>
-											<c:if test="${item.paper_type == '2' }">
-																<span class="td-paper-type" data-id="${item.paper_type}">
-																模拟考试
-																</span>
-											</c:if>
-											<c:if test="${item.paper_type == '3' }">
-																<span class="td-paper-type" data-id="${item.paper_type}">
-																专家试卷
-																</span>
-											</c:if>
-										</td>
+<%--										<td>--%>
+<%--											<c:if test="${item.paper_type == '1' }">--%>
+<%--																<span class="td-paper-type" data-id="${item.paper_type}">--%>
+<%--																	随机组卷--%>
+<%--																</span>--%>
+<%--											</c:if>--%>
+<%--											<c:if test="${item.paper_type == '2' }">--%>
+<%--																<span class="td-paper-type" data-id="${item.paper_type}">--%>
+<%--																模拟考试--%>
+<%--																</span>--%>
+<%--											</c:if>--%>
+<%--											<c:if test="${item.paper_type == '3' }">--%>
+<%--																<span class="td-paper-type" data-id="${item.paper_type}">--%>
+<%--																专家试卷--%>
+<%--																</span>--%>
+<%--											</c:if>--%>
+<%--										</td>--%>
+										<td>startTime</td>
+										<td>departments</td>
+										<td>categories</td>
 										<td>${item.creator }</td>
 										<td>
 											<c:choose>

@@ -184,7 +184,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<script type="text/javascript" src="resources/js/all.js"></script>
 		<script type="text/javascript" src="resources/js/jquery-ui-1.9.2.custom.min.js"></script>
 		
-		<script type="text/javascript" src="resources/js/uploadify/jquery.uploadify3.1Fixed.js"></script>
 		<script type="text/javascript" src="resources/js/question-upload-img.js"></script>
 		<script type="text/javascript" src="resources/js/field-2-point.js"></script>
 		<script type="text/javascript" src="resources/js/question-add.js"></script>

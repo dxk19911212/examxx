@@ -122,24 +122,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 		</div>
 
-<%--		<div id="fileuploader">Upload</div>--%>
-
 		<!-- Javascript files -->
 		<!-- jQuery -->
 		<script type="text/javascript" src="resources/js/jquery/jquery-1.9.0.min.js"></script>
 
 		<!-- Bootstrap JS -->
 		<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
-
-<%--		<link rel="stylesheet" type="text/css" href="resources/js/upload/uploadfile.css">--%>
-<%--		<script type="text/javascript" src="resources/js/upload/jquery.uploadfile.min.js"></script>--%>
-<%--		<script type="text/javascript">--%>
-<%--			$(document).ready(function()--%>
-<%--		  {--%>
-<%--			  $("#fileuploader").uploadFile({--%>
-<%--				url: document.getElementsByTagName('base')[0].href + 'upload-test'--%>
-<%--			});--%>
-<%--		  });--%>
-<%--		</script>--%>
 	</body>
 </html>

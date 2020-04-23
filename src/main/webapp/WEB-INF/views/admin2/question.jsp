@@ -108,7 +108,7 @@ String basePath = request.getScheme() + "://"
 								<a href="admin/paper"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
 							</li>
 							<li>
-								<a href=""> <i class="fa fa-list-ul"></i> 资料上传 </a>
+								<a href="admin/upload-data"> <i class="fa fa-list-ul"></i> 资料上传 </a>
 							</li>
 						</ul>
 					</div>
@@ -527,7 +527,7 @@ String basePath = request.getScheme() + "://"
 										</div>
 										<div class="modal-body">
 											<div id="add-question-img-dialog" title="图片上传工具">
-												<form>
+<%--												<form>--%>
 													<div class="form-line img-destination">
 														<span class="form-label">添加至：</span>
 														<label></label>
@@ -535,12 +535,15 @@ String basePath = request.getScheme() + "://"
 													</div>
 													<div class="form-line add-update-quetstionfile">
 														<span class="form-label">上传图片：</span>
-<%--														<div id="div-file-list"></div>--%>
-<%--														<div class="form-line" id="uploadify"></div>--%>
-														<input type="file" id="uploadify-img" name="uploadify">
+														<form id="dropzone" action="upload-img" class="dropzone">
+															<div class="dz-default dz-message">
+																<span>将文件拖至此处或点击选择</span>
+															</div>
+															<input type="hidden" name="file_id"/>
+														</form>
 														<span class="form-message">请上传png、jpg图片文件，且不能大于100KB。为了使得图片显示正常，请上传的图片长宽比例为2:1</span>
 													</div>
-												</form>
+<%--												</form>--%>
 											</div>
 										</div>
 
@@ -571,8 +574,8 @@ String basePath = request.getScheme() + "://"
 		<!-- Javascript files -->
 		<!-- jQuery -->
 		<script type="text/javascript" src="resources/js/jquery/jquery-1.9.0.min.js"></script>
-		<script type="text/javascript" src="resources/js/uploadify/jquery.uploadify3.1Fixed.js"></script>
-		<link rel="stylesheet" type="text/css" href="resources/js/uploadify/uploadify.css">
+		<link rel="stylesheet" type="text/css" href="resources/js/upload/dropzone.min.css">
+		<script type="text/javascript" src="resources/js/upload/dropzone.min.js"></script>
 		<!-- Bootstrap JS -->
 		<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="resources/js/all.js"></script>
@@ -581,11 +584,13 @@ String basePath = request.getScheme() + "://"
 		<script type="text/javascript" src="resources/js/question-add.js"></script>
 		<script type="text/javascript" src="resources/js/question-import.js"></script>
 		<script type="text/javascript" src="resources/js/question-upload-img.js"></script>
+
 		<script>
 			$(function(){
 				$(".change-property").click(function(){
 					$("#change-property-modal").modal({backdrop:true,keyboard:true});
 					var paper_id =  $(this).parent().parent().find(":checkbox").val();
+					console.log("paper_id:"+paper_id)
 					$("#add-update-questionid").text(paper_id);
 					$.ajax({
 							   headers : {
@@ -646,17 +651,19 @@ String basePath = request.getScheme() + "://"
 				});
 
 				$("#update-exampaper-btn").click(function(){
+					var questionId = $("#add-update-questionid").text();
+					var pointId = $("#point-from-select option:selected").val();
+					console.log("pointId:" + pointId)
 
-					if($("#point-from-select").val()==null||$("#point-from-select").val()==""){
+					if(pointId == null || pointId == ""){
 						util.error("请选择知识类");
 					}
-					$("#point-from-select").val();
-					var data = new Array();
 
+					var data = new Array();
 					$(".q-label-item").each(function(){
 						var tag = new Object();
 						tag.tagId = $(this).data("id");
-						tag.questionId = $("#add-update-questionid").text();
+						tag.questionId = questionId;
 						data.push(tag);
 					});
 					$.ajax({
@@ -665,7 +672,7 @@ String basePath = request.getScheme() + "://"
 								   'Content-Type' : 'application/json'
 							   },
 							   type : "POST",
-							   url : "admin/question-update/" + $("#add-update-questionid").text() + "/" +  $("#point-from-select").val(),
+							   url : "admin/question-update/" + questionId + "/" + pointId,
 							   data : JSON.stringify(data),
 							   success : function(message, tst, jqXHR) {
 								   if (!util.checkSessionOut(jqXHR))
