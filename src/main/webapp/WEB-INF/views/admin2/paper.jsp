@@ -152,6 +152,13 @@ String basePath = request.getScheme() + "://"
 									</span>
 								</span>
 							</dl>
+							<dl id="question-filter-title" style="margin-left: 10px;">
+								<span>试卷名称：</span>
+								<span>
+									<input id="question-filter-title-input" type="text" value="${paperFilter.name}"
+										   class="form-control" style="background-color: #ffffff">
+								</span>
+							</dl>
 							<span id="question-filter-department" style="margin-left: 10px;">
 								<span>开放部门：</span>
 								<span>

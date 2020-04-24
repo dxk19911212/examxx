@@ -251,18 +251,19 @@ public class BaseController {
 	@RequestMapping(value = { "/admin/paper" }, method = RequestMethod.GET)
 	public String toManagePapers(Model model, HttpServletRequest request) {
 		this.appendBaseInfo(model);
-		return "redirect:paper-0-0-0-0-1.html";
+		return "redirect:paper-0-0-0-0-0-1.html";
 	}
 
 	/**
 	 * 试卷列表
 	 */
-	@RequestMapping(value = "/admin/paper-{status}-{departments}-{categories}-{starttime}-{page}.html", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/paper-{status}-{departments}-{categories}-{starttime}-{name}-{page}.html", method = RequestMethod.GET)
 	public String exampaperListFilterPage(Model model,
 										  @PathVariable("status") String status,
 										  @PathVariable("departments") String departments,
 										  @PathVariable("categories") String categories,
 										  @PathVariable("starttime") String starttime,
+										  @PathVariable("name") String name,
 										  @PathVariable("page") int page) {
 		try {
 			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
@@ -281,6 +282,7 @@ public class BaseController {
 		pf.setDepartments("0".equals(departments) ? "" : departments);
 		pf.setCategories("0".equals(categories) ? "" : categories);
 		pf.setStarttime("0".equals(starttime) ? "" : DateUtil.timeStamp2Date(starttime, null));
+		pf.setName("0".equals(name) ? "" : name);
 
 		List<ExamPaper> paperList = examService.getExamPaperList(pf, pageModel);
 		String pageStr = PagingUtil.getPageBtnlink(page, pageModel.getTotalPage());

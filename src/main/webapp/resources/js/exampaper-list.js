@@ -47,6 +47,9 @@ var question_list = {
 			} else if ($(this).parent().parent().attr("id") == "question-filter-starttime") {
 				genrateParamOld.starttime = $('#laydate2-hidden').val();
 				question_list.redirectUrl(genrateParamOld);
+			} else if ($(this).parent().parent().attr("id") == "question-filter-title-input") {
+				genrateParamOld.name = $('#question-filter-title-input').val();
+				question_list.redirectUrl(genrateParamOld);
 			} else if ($(this).parent().parent().attr("id") == "question-filter-department") {
 				var departments = $("#question-filter-department select").val();
 				if (departments != null) {
@@ -173,11 +176,13 @@ var question_list = {
 		var data = new Object();
 		var status = $("#question-filter-status dd .label").data("id");
 		var starttime = $("#laydate2-hidden").val();
+		var name = $("#question-filter-title-input").val();
 		var departments = $("#question-filter-department select").val();
 		var categories = $("#question-filter-category select").val();
 
 		data.status = status;
 		data.starttime = starttime != '' ? starttime : 0;
+		data.name = name != '' ? name : 0;
 		data.departments = departments != null ? departments.toString() : 0;
 		data.categories = categories != null ? categories.toString() : 0;
 		data.page = 1;
@@ -193,7 +198,9 @@ var question_list = {
 		}
 		var departments = newparam.departments;
 		var categories = newparam.categories;
-		var paramurl = status + "-" + departments + "-" + categories + "-" + starttime + "-" + newparam.page + ".html";
+		var paramurl = status + "-" + departments
+					   + "-" + categories + "-" + starttime
+					   + "-" + newparam.name + "-" + newparam.page + ".html";
 
 		document.location.href = document.getElementsByTagName('base')[0].href
 				+ 'admin/paper-' + paramurl;

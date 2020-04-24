@@ -14,11 +14,21 @@ public class PaperFilter implements Serializable {
 
 	private String status;
 
+	private String name;
+
 	private String departments;
 
 	private String categories;
 
 	private String starttime;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public String getStatus() {
 		return status;
