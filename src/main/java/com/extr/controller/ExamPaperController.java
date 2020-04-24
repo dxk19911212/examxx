@@ -53,23 +53,23 @@ public class ExamPaperController {
 		return "redirect:exampaperfilter-0-1.html";
 	}
 
-	@RequestMapping(value = "/admin/exampaperfilter-{papertype}-{page}.html", method = RequestMethod.GET)
-	public String exampaperListFilterPageAdmin(Model model,
-			@PathVariable("papertype") String papertype,
-			@PathVariable("page") int page) {
-
-		Page<ExamPaper> pageModel = new Page<ExamPaper>();
-		pageModel.setPageNo(page);
-		pageModel.setPageSize(10);
-		List<ExamPaper> paper = examService.getExamPaperListByPaperType(
-				papertype, pageModel);
-		String pageStr = PagingUtil.getPageBtnlink(page,
-				pageModel.getTotalPage());
-		model.addAttribute("papertype", papertype);
-		model.addAttribute("paper", paper);
-		model.addAttribute("pageStr", pageStr);
-		return "admin2/paper";
-	}
+//	@RequestMapping(value = "/admin/exampaperfilter-{papertype}-{page}.html", method = RequestMethod.GET)
+//	public String exampaperListFilterPageAdmin(Model model,
+//			@PathVariable("papertype") String papertype,
+//			@PathVariable("page") int page) {
+//
+//		Page<ExamPaper> pageModel = new Page<ExamPaper>();
+//		pageModel.setPageNo(page);
+//		pageModel.setPageSize(10);
+//		List<ExamPaper> paper = examService.getExamPaperListByPaperType(
+//				papertype, pageModel);
+//		String pageStr = PagingUtil.getPageBtnlink(page,
+//				pageModel.getTotalPage());
+//		model.addAttribute("papertype", papertype);
+//		model.addAttribute("paper", paper);
+//		model.addAttribute("pageStr", pageStr);
+//		return "admin2/paper";
+//	}
 
 	@RequestMapping(value = "/admin/exampaper-add", method = RequestMethod.GET)
 	public String exampaperAddPage(Model model) {
@@ -197,7 +197,7 @@ public class ExamPaperController {
 		Message message = new Message();
 		ExamPaper examPaper = new ExamPaper();
 		examPaper.setId(examPaperId);
-		examPaper.setStatus(1);
+		examPaper.setStatus(2);
 		try{
 			examService.updateExamPaper(examPaper);
 		}catch(Exception e){
@@ -256,7 +256,7 @@ public class ExamPaperController {
 		Message message = new Message();
 		try{
 			ExamPaper examPaper = examService.getExamPaperById(examPaperId);
-			if(examPaper.getStatus() == 1){
+			if(examPaper.getStatus() == 2){
 				message.setResult("已发布的试卷不允许删除");
 				return message;
 			}
@@ -272,7 +272,7 @@ public class ExamPaperController {
 		Message message = new Message();
 		ExamPaper examPaper = new ExamPaper();
 		examPaper.setId(examPaperId);
-		examPaper.setStatus(2);
+		examPaper.setStatus(3);
 		try{
 			examService.updateExamPaper(examPaper);
 		}catch(Exception e){

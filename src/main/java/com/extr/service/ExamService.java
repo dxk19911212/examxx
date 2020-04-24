@@ -2,6 +2,8 @@ package com.extr.service;
 
 import java.util.HashMap;
 import java.util.List;
+
+import com.extr.controller.domain.PaperFilter;
 import com.extr.controller.domain.QuestionQueryResult;
 import com.extr.domain.exam.ExamHistory;
 import com.extr.domain.exam.ExamPaper;
@@ -26,8 +28,7 @@ public interface ExamService {
 			HashMap<Integer, Float> questionTypePoint,
 			HashMap<Integer, Float> knowledgePointRate, ExamPaper examPaper);
 
-	public List<ExamPaper> getExamPaperListByPaperType(String paperType,
-			Page<ExamPaper> page);
+	public List<ExamPaper> getExamPaperList(PaperFilter pf, Page<ExamPaper> page);
 
 	public void updateExamPaper(ExamPaper examPaper);
 

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.extr.controller.domain.PaperFilter;
 import com.extr.controller.domain.QuestionFilter;
 import com.extr.controller.domain.QuestionImproveResult;
 import com.extr.domain.exam.ExamHistory;
@@ -42,6 +43,7 @@ import com.extr.service.QuestionService;
 import com.extr.service.UserService;
 import com.extr.util.Page;
 import com.extr.util.PagingUtil;
+import com.extr.util.xml.DateUtil;
 
 @Controller
 public class BaseController {
@@ -214,46 +216,32 @@ public class BaseController {
 			return "login";
 		}
 
-		QuestionFilter qf = new QuestionFilter();
-		qf.setFieldId(fieldId);
-		qf.setKnowledge(knowledge);
-		qf.setQuestionType(questionType);
-		if ("0".equals(searchParam)) {
-			searchParam = "-1";
-		}
-		qf.setSearchParam(searchParam);
-
 		Page<Question> pageModel = new Page<Question>();
 		pageModel.setPageNo(page);
 		pageModel.setPageSize(20);
 
-		List<Question> questionList = questionService.getQuestionList(
-				pageModel, qf);
+		QuestionFilter qf = new QuestionFilter();
+		qf.setFieldId(fieldId);
+		qf.setKnowledge(knowledge);
+		qf.setQuestionType(questionType);
+		qf.setSearchParam("0".equals(searchParam) ? "" : searchParam);
 
-		String pageStr = PagingUtil.getPageBtnlink(page,
-				pageModel.getTotalPage());
+		List<Question> questionList = questionService.getQuestionList(pageModel, qf);
+		String pageStr = PagingUtil.getPageBtnlink(page, pageModel.getTotalPage());
 
-		List<Field> fieldList = questionService.getAllField(null);
-		model.addAttribute("fieldList", fieldList);
-
-		/*if(fieldList.size() > 0)
-			fieldId = fieldList.get(0).getFieldId();*/
-		model.addAttribute("knowledgeList",
-				questionService.getKnowledgePointByFieldId(fieldId,null));
-
-		model.addAttribute("questionTypeList",
-				questionService.getQuestionTypeList());
-
+		// 题库
+		model.addAttribute("fieldList", questionService.getAllField(null));
+		// 知识点
+		model.addAttribute("knowledgeList", questionService.getKnowledgePointByFieldId(fieldId,null));
+		// 知识分类
+		model.addAttribute("questionTypeList", questionService.getQuestionTypeList());
+		// 标签
+		model.addAttribute("tagList", questionService.getTagByUserId(userInfo.getUserid(), null));
+		// 保存筛选信息
 		model.addAttribute("questionFilter", qf);
+
 		model.addAttribute("questionList", questionList);
 		model.addAttribute("pageStr", pageStr);
-		model.addAttribute("tagList", questionService.getTagByUserId(userInfo.getUserid(), null));
-		//保存筛选信息，删除后跳转页面时使用
-		model.addAttribute("fieldId", fieldId);
-		model.addAttribute("knowledge", knowledge);
-		model.addAttribute("questionType", questionType);
-		model.addAttribute("searchParam", searchParam);
-
 		return "admin2/question";
 	}
 
@@ -263,26 +251,48 @@ public class BaseController {
 	@RequestMapping(value = { "/admin/paper" }, method = RequestMethod.GET)
 	public String toManagePapers(Model model, HttpServletRequest request) {
 		this.appendBaseInfo(model);
-		return "redirect:paper-0-1.html";
+		return "redirect:paper-0-0-0-0-1.html";
 	}
 
 	/**
 	 * 试卷列表
 	 */
-	@RequestMapping(value = "/admin/paper-{papertype}-{page}.html", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/paper-{status}-{departments}-{categories}-{starttime}-{page}.html", method = RequestMethod.GET)
 	public String exampaperListFilterPage(Model model,
-										  @PathVariable("papertype") String papertype,
+										  @PathVariable("status") String status,
+										  @PathVariable("departments") String departments,
+										  @PathVariable("categories") String categories,
+										  @PathVariable("starttime") String starttime,
 										  @PathVariable("page") int page) {
+		try {
+			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
+					.getAuthentication()
+					.getPrincipal();
+		} catch (Exception e) {
+			return "login";
+		}
 
 		Page<ExamPaper> pageModel = new Page<ExamPaper>();
 		pageModel.setPageNo(page);
-		pageModel.setPageSize(10);
-		List<ExamPaper> paper = examService.getExamPaperListByPaperType(
-				papertype, pageModel);
-		String pageStr = PagingUtil.getPageBtnlink(page,
-				pageModel.getTotalPage());
-		model.addAttribute("papertype", papertype);
-		model.addAttribute("paper", paper);
+		pageModel.setPageSize(15);
+
+		PaperFilter pf = new PaperFilter();
+		pf.setStatus(status);
+		pf.setDepartments("0".equals(departments) ? "" : departments);
+		pf.setCategories("0".equals(categories) ? "" : categories);
+		pf.setStarttime("0".equals(starttime) ? "" : DateUtil.timeStamp2Date(starttime, null));
+
+		List<ExamPaper> paperList = examService.getExamPaperList(pf, pageModel);
+		String pageStr = PagingUtil.getPageBtnlink(page, pageModel.getTotalPage());
+
+		// 开放部门 todo
+		model.addAttribute("departmentList", null);
+		// 开放警种 todo
+		model.addAttribute("categoryList", null);
+		// 保存筛选信息
+		model.addAttribute("paperFilter", pf);
+
+		model.addAttribute("paperList", paperList);
 		model.addAttribute("pageStr", pageStr);
 		return "admin2/paper";
 	}

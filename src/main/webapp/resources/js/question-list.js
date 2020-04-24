@@ -77,20 +77,12 @@ var question_list = {
 	},
 	
 	genrateParamOld :function genrateParamOld(){
-		
-		var field = $("#question-filter-field dd .label").data("id");
-		var knowledge = $("#question-filter-knowledge dd .label").data("id");
-		var questiontype = $("#question-filter-qt dd .label").data("id");
-		var searchParam = $("#question-filter-title-input").val();
-		var page = 1;
-		
 		var data = new Object();
-		data.field = field;
-		data.knowledge = knowledge==null?0:knowledge;
-		data.questiontype= questiontype;
-		data.searchParam = searchParam;
-		data.page = page;
-		
+		data.field = $("#question-filter-field dd .label").data("id");
+		data.knowledge = $("#question-filter-knowledge dd .label").data("id");
+		data.questiontype= $("#question-filter-qt dd .label").data("id");
+		data.searchParam = $("#question-filter-title-input").val();
+		data.page = 1;
 		return data;
 	},
 

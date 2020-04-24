@@ -195,23 +195,21 @@ String basePath = request.getScheme() + "://"
 										</c:forEach>
 									</dd>
 								</dl>
-								<dl id="question-filter-title">
-									<dt>
-										试题题目：
-									</dt>
-									<dd>
-										<div class="col-md-4">
-											<input id="question-filter-title-input" type="text" class="form-control" style="background-color: #ffffff">
-										</div>
-										<div class="col-md-4">
-											<a class="btn btn-primary">查询</a>
-										</div>
-									</dd>
+								<dl id="question-filter-title" style="margin-left: 10px;">
+									<span>试题名称：</span>
+									<span>
+										<input id="question-filter-title-input" type="text" value="${questionFilter.searchParam}"
+											   class="form-control" style="background-color: #ffffff">
+									</span>
+									<a class="btn btn-primary">查询</a>
 								</dl>
 							</div>
 							<div class="col-md-10">
 								<a class="btn btn-primary" data-toggle="modal" data-target=".question-add">添加试题</a>
 								<a class="btn btn-primary" data-toggle="modal" data-target=".question-import">导入试题</a>
+							</div>
+							<div class="page-link-content">
+								<ul class="pagination pagination-sm">${pageStr}</ul>
 							</div>
 							<div id="question-list">
 								<input id="field-id-hidden" value="${fieldId }" type="hidden">

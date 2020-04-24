@@ -66,7 +66,7 @@ String basePath = request.getScheme() + "://"
 
 		<div style="margin-bottom: 100px;">
 			<div class="col-xs-2" style="padding-left:0">
-				<ul class="nav default-sidenav">
+				<ul class="nav default-sidenav" style="border-right: 1px solid #666;">
 					<li>
 						<a href="admin/question"> <i class="fa fa-list-ul"></i> 试题管理 </a>
 					</li>

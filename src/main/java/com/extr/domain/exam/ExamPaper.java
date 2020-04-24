@@ -1,5 +1,7 @@
 package com.extr.domain.exam;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,14 +11,12 @@ public class ExamPaper implements Serializable {
 	protected int id;
 	protected String name;
 	protected String content;
+	// 时长
 	protected int duration;
 	protected int pass_point;
 	protected float total_point;
 	protected Date create_time;
-	/**
-	 * 0:默认 1：发布
-	 */
-	protected int status;
+	protected Integer status;
 	protected String summary;
 	protected boolean is_visible;
 	protected int group_id;
@@ -26,6 +26,14 @@ public class ExamPaper implements Serializable {
 	protected String paper_type;
 	protected int field_id;
 	protected int field_name;
+
+	// 开放时间
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	protected Date start_time;
+	// 开放部门
+	protected String departments;
+	// 开放警种
+	protected String categories;
 
 	public int getField_id() {
 		return field_id;
@@ -83,11 +91,11 @@ public class ExamPaper implements Serializable {
 		this.group_id = group_id;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
@@ -163,18 +171,27 @@ public class ExamPaper implements Serializable {
 		this.pass_point = pass_point;
 	}
 
-
-
-	@Override
-	public String toString() {
-		return "ExamPaper [id=" + id + ", name=" + name + ", content="
-				+ content + ", duration=" + duration + ", pass_point="
-				+ pass_point + ", total_point=" + total_point
-				+ ", create_time=" + create_time + ", status=" + status
-				+ ", subjective=" + is_subjective + ", summary=" + summary
-				+ ", is_visible=" + is_visible + ", group_id=" + group_id + "]";
+	public Date getStart_time() {
+		return start_time;
 	}
-	
-	
-	
+
+	public void setStart_time(Date start_time) {
+		this.start_time = start_time;
+	}
+
+	public String getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(String departments) {
+		this.departments = departments;
+	}
+
+	public String getCategories() {
+		return categories;
+	}
+
+	public void setCategories(String categories) {
+		this.categories = categories;
+	}
 }

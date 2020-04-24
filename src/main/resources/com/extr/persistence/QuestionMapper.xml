@@ -204,8 +204,8 @@
 			<if test="filter.questionType != 0">
 				and a.question_type_id = #{filter.questionType}
 			</if>
-			<if test="filter.searchParam != '-1'">
-				and instr(a.name,#{filter.searchParam})&lt;&gt;0
+			<if test="filter.searchParam != null and filter.searchParam != ''">
+				and a.name like concat('%', #{filter.searchParam}, '%')
 			</if>
 		</where>
 		order by a.last_modify desc

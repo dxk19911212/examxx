@@ -1,9 +1,11 @@
 package com.extr.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +13,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import com.extr.controller.domain.PaperFilter;
 import com.extr.controller.domain.QuestionQueryResult;
 import com.extr.domain.exam.ExamHistory;
 import com.extr.domain.exam.ExamPaper;
@@ -97,10 +101,40 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public List<ExamPaper> getExamPaperListByPaperType(String paperType,
-			Page<ExamPaper> page) {
-		// TODO Auto-generated method stub
-		return examPaperMapper.getExamPaperListByPaperType(paperType, page);
+	public List<ExamPaper> getExamPaperList(PaperFilter pf, Page<ExamPaper> page) {
+		List<ExamPaper> examPapers = examPaperMapper.getExamPaperList(pf, page);
+
+		// 两个多选框都为空
+		if ("".equals(pf.getDepartments()) && "".equals(pf.getCategories())) {
+			return examPapers;
+		}
+
+		List<String> departmentList = Arrays.asList(pf.getDepartments().split(","));
+		List<String> categoryList = Arrays.asList(pf.getCategories().split(","));
+
+		// 对开放部门、警种做过滤处理
+		return examPapers.stream()
+				.filter(examPaper -> isCoincide(departmentList, Arrays.asList(examPaper.getDepartments().split(",")))
+						&& isCoincide(categoryList, Arrays.asList(examPaper.getCategories().split(","))))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 *
+	 * @param targetList 多选框内容
+	 * @param originList 数据内容
+	 * @return
+	 */
+	private boolean isCoincide(List<String> targetList, List<String> originList){
+		if (targetList.size() == 1 && "".equals(targetList.get(0)))  {
+			return true;
+		}
+		for (String s : targetList) {
+			if (originList.contains(s)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

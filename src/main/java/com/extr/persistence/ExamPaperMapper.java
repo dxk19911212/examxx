@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.extr.controller.domain.PaperFilter;
 import com.extr.domain.exam.ExamPaper;
 import com.extr.util.Page;
 
@@ -13,9 +14,8 @@ public interface ExamPaperMapper {
 
 	public ExamPaper getExamPaperById(@Param("examPaperId") int examPaperId);
 
-	public List<ExamPaper> getExamPaperListByPaperType(
-			@Param("paperType") String paperType,
-			@Param("page") Page<ExamPaper> page);
+	public List<ExamPaper> getExamPaperList(@Param("filter") PaperFilter filter,
+											@Param("page") Page<ExamPaper> page);
 	
 	public void updateExamPaper(ExamPaper examPaper);
 

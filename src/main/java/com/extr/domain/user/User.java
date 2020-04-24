@@ -26,7 +26,12 @@ public class User implements Serializable {
 	
 	private String province;
 	private String company;
+	// 部门
 	private String department;
+	// 警种
+	private String category;
+	// 警号
+	private String officerNumber;
 	
 	public Date getLoginTime() {
 		return loginTime;
