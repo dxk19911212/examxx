@@ -444,12 +444,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$(".q-label-list").on("click",".fa",function(){
 					$(this).parent().remove();
 				});
-				
-				
 			});
-		
-		
-		
 		</script>
 	</body>
 </html>

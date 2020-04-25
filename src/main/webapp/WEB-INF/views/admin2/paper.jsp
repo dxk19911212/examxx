@@ -86,7 +86,7 @@ String basePath = request.getScheme() + "://"
 						<a href="admin/paper"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
 					</li>
 					<li>
-						<a href="admin/upload-data"> <i class="fa fa-list-ul"></i> 资料上传 </a>
+						<a href="admin/media"> <i class="fa fa-list-ul"></i> 资料上传 </a>
 					</li>
 				</ul>
 			</div>
@@ -284,15 +284,6 @@ String basePath = request.getScheme() + "://"
 													<input type="text" class="df-input-narrow">
 													<span class="form-message"></span>
 												</div>
-<%--												<div class="form-line exampaper-type" id="exampaper-type">--%>
-<%--													<span class="form-label"><span class="warning-label">*</span>分类：</span>--%>
-<%--													<select id="exampaper-type-select" class="df-input-narrow">--%>
-
-<%--														<option value="1">随机组卷</option>--%>
-<%--														<option value="2">模拟考试</option>--%>
-<%--														<option value="3">专家试卷</option>--%>
-<%--													</select><span class="form-message"></span>--%>
-<%--												</div>--%>
 												<div class="form-line add-update-starttime">
 													<span class="form-label"><span class="warning-label">*</span>开放时间：</span>
 													<input type="text" id="laydate1">
@@ -301,27 +292,12 @@ String basePath = request.getScheme() + "://"
 												</div>
 												<div class="form-line add-update-department">
 													<span class="form-label"><span class="warning-label">*</span>开放部门：</span>
-													<select class="js-example-basic-multiple" multiple="multiple">
-<%--														<option value="1" selected>刑事部门</option>--%>
-<%--														<option value="2">治安部门</option>--%>
-<%--														<option value="3">交通管理部门</option>--%>
-<%--														<option value="4">消防部门</option>--%>
-<%--														<option value="5">出入境部门</option>--%>
-<%--														<option value="6">人口管理部门</option>--%>
-<%--														<option value="7">内安全保卫部门</option>--%>
-													</select>
+													<select class="js-example-basic-multiple" multiple="multiple"></select>
 													<span class="form-message"></span>
 												</div>
 												<div class="form-line add-update-category">
 													<span class="form-label"><span class="warning-label">*</span>警种：</span>
-													<select class="js-example-basic-multiple" multiple="multiple">
-<%--														<option value="1" selected>治安警察</option>--%>
-<%--														<option value="2" selected>交通警察</option>--%>
-<%--														<option value="3">外事警察</option>--%>
-<%--														<option value="4">禁毒警察</option>--%>
-<%--														<option value="5">监所警察</option>--%>
-<%--														<option value="6">公安法医</option>--%>
-													</select>
+													<select class="js-example-basic-multiple" multiple="multiple"></select>
 													<span class="form-message"></span>
 												</div>
 											</form>
@@ -354,40 +330,40 @@ String basePath = request.getScheme() + "://"
 		<script type="text/javascript" src="resources/js/select/select2.min.js"></script>
 		<link href="resources/js/select/select2.min.css" rel="stylesheet">
 		<script>
-			$(document).ready(function() {
+			$(function(){
 				$('#question-filter-department select').select2({
-				   placeholder: "请选择",
-				   multiple: true,
-					width:'200px',
-				   data: [
-					   {id: 1, text: '刑事部门'},
-					   {id: 2, text: '治安部门'},
-					   {id: 3, text: '交通管理部门'},
-					   {id: 4, text: '消防部门'},
-					   {id: 5, text: '出入境部门'},
-					   {id: 6, text: '人口管理部门'},
-					   {id: 7, text: '内安全保卫部门'}]
-			   });
+						placeholder: "请选择",
+						multiple: true,
+						width:'200px',
+						data: [
+							{id: 1, text: '刑事部门'},
+							{id: 2, text: '治安部门'},
+							{id: 3, text: '交通管理部门'},
+							{id: 4, text: '消防部门'},
+							{id: 5, text: '出入境部门'},
+							{id: 6, text: '人口管理部门'},
+							{id: 7, text: '内安全保卫部门'}]
+					});
 
 				$('#question-filter-category select').select2({
-					 placeholder: "请选择",
-					 multiple: true,
-					width:'200px',
-					 data: [
-						 {id: 1, text: '治安警察'},
-						 {id: 2, text: '交通警察'},
-						 {id: 3, text: '外事警察'},
-						 {id: 4, text: '禁毒警察'},
-						 {id: 5, text: '监所警察'},
-						 {id: 6, text: '公安法医'}]
-				 });
+						  placeholder: "请选择",
+						  multiple: true,
+						  width:'200px',
+						  data: [
+							  {id: 1, text: '治安警察'},
+							  {id: 2, text: '交通警察'},
+							  {id: 3, text: '外事警察'},
+							  {id: 4, text: '禁毒警察'},
+							  {id: 5, text: '监所警察'},
+							  {id: 6, text: '公安法医'}]
+					  });
 
 				// 刷新保留多选框赋值
 				var paper_departments = $('#question-filter-department-input').val();
 				var paper_categories = $('#question-filter-category-input').val();
 				$("#question-filter-department select").val(paper_departments.split(',')).trigger('change');
 				$("#question-filter-category select").val(paper_categories.split(',')).trigger('change');
-			});
+			})
 
 			laydate.render({
 				elem: '#laydate1',
@@ -401,7 +377,6 @@ String basePath = request.getScheme() + "://"
 			   elem: '#question-filter-starttime-input',
 			   type: 'datetime',
 			   done: function(value){
-			   	console.log(value.replace(/-/g,'/'))
 				   $('#laydate2-hidden').val(value);
 			   }
 		    });

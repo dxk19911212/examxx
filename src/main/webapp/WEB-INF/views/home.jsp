@@ -84,31 +84,46 @@ String basePath = request.getScheme() + "://"
 				<form class="navbar-form" role="search">
 					<div class="form-group">
 						检索内容：
-						<input type="text" class="form-control" placeholder="">
-						<button type="submit" class="btn btn-default">查询</button>
+						<input id="search-input" type="text" class="form-control" placeholder="" value="${mediaFilter.title}">
+						<button id="search-btn" type="submit" class="btn btn-default" style="margin-left: 20px">查询</button>
 					</div>
 				</form>
 
 				<div class="divider">
 					<div class="text">
 						<p style="font-size: 20px">视频资料</p>
-						<p>更多</p>
+						<p style="cursor:pointer;">更多</p>
 					</div>
 
 					<hr class="simple" style="color: #6f5499" />
-					<div class="pic" style="justify-content: space-around; margin-left:20px">
-						<img alt="" src="resources/images/bitmap.png">
-						<img alt="" src="resources/images/bitmap.png">
-						<img alt="" src="resources/images/bitmap.png">
-						<img alt="" src="resources/images/bitmap.png">
-						<img alt="" src="resources/images/bitmap.png">
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							<c:forEach items="${mediaList }" var="item">
+								<div class="swiper-slide" style="background-color: #24292D">
+									<c:choose>
+										<c:when test="${item.type == 1 }">
+											<img style="width: 220px;height: 220px;" alt="" src="${item.url }">
+										</c:when>
+										<c:when test="${item.type == 2 }">
+											<a target="_blank" href="${item.url }">${item.url }</a>
+										</c:when>
+										<c:when test="${item.type == 3 }">
+											<video style="width: 220px;height: 220px;" src="${item.url }" alt=""/>
+										</c:when>
+									</c:choose>
+								</div>
+							</c:forEach>
+						</div>
+						<%--						<div class="swiper-pagination"></div>--%>
+						<div class="swiper-button-next"></div>
+						<div class="swiper-button-prev"></div>
 					</div>
 				</div>
 
 				<div class="divider" style="margin-top:100px">
 					<div class="text">
 						<p style="font-size: 20px">文档资料</p>
-						<p>更多</p>
+						<p style="cursor:pointer;">更多</p>
 					</div>
 					<hr class="simple" style="color: #6f5499" />
 				</div>
@@ -132,14 +147,15 @@ String basePath = request.getScheme() + "://"
 
 		<!-- Javascript files -->
 		<!-- jQuery -->
-		<script type="text/javascript"
-		src="resources/js/jquery/jquery-1.9.0.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery/jquery-1.9.0.min.js"></script>
 		<!-- Bootstrap JS -->
-		<script type="text/javascript"
-		src="resources/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="resources/js/swiper/swiper.min.css">
+		<script type="text/javascript" src="resources/js/swiper/swiper.min.js"></script>
+
 		<script>
 		$(function(){
-			bindQuestionKnowledage();
 			var result = checkBrowser();
 			if (!result){
 				alert("请至少更新浏览器版本至IE8或以上版本");
@@ -159,33 +175,31 @@ String basePath = request.getScheme() + "://"
 			} else
 				return true;
 		}
-		
-		function bindQuestionKnowledage(){
-			$(".knowledge-title").click(function(){
-				var ul = $(this).parent().find(".question-list-knowledge");
-				
-				if(ul.is(":visible")){
-					$(this).find(".fa-chevron-down").hide();
-					$(this).find(".fa-chevron-up").show();
-					
-					$(".question-list-knowledge").slideUp();
-					
-				}else{
-					$(".fa-chevron-down").hide();
-					$(".fa-chevron-up").show();
-					
-					$(this).find(".fa-chevron-up").hide();
-					$(this).find(".fa-chevron-down").show();
-					
-					$(".question-list-knowledge").slideUp();
-					ul.slideDown();
-					
-				}
-				
-				
-			});
-		}
+
+		var swiper = new Swiper('.swiper-container', {
+			slidesPerView: 4,
+			spaceBetween: 30,
+			centeredSlides: true,
+			loop: true,
+			pagination: {
+				el: '.swiper-pagination',
+				clickable: true,
+			},
+			navigation: {
+				nextEl: '.swiper-button-next',
+				prevEl: '.swiper-button-prev',
+			},
+			autoplay: {
+				delay: 2000,
+				disableOnInteraction: false,
+			}
+		});
+
+		$("#search-btn").click(function () {
+			var title = $("#search-input").val();
+			document.location.href =
+					document.getElementsByTagName('base')[0].href + 'homemedia-' + title + '.html';
+		});
 		</script>
-<%--		<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1252987997'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1252987997' type='text/javascript'%3E%3C/script%3E"));</script>--%>
 	</body>
 </html>

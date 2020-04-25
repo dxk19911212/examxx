@@ -134,34 +134,10 @@ String basePath = request.getScheme() + "://"
 
 		</div>
 
-<%--		<form id="dropzone" action="upload-img" class="dropzone">--%>
-<%--			<div class="dz-default dz-message">--%>
-<%--				<span>将文件拖至此处或点击选择</span>--%>
-<%--			</div>--%>
-<%--			<input type="hidden" name="file_id"/>--%>
-<%--		</form>--%>
-
 		<!-- Javascript files -->
 		<!-- jQuery -->
 		<script type="text/javascript" src="resources/js/jquery/jquery-1.9.0.min.js"></script>
 		<!-- Bootstrap JS -->
 		<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
-
-		<link rel="stylesheet" type="text/css" href="resources/js/upload/dropzone.min.css">
-		<script type="text/javascript" src="resources/js/upload/dropzone.min.js"></script>
-		<script type="text/javascript">
-			// Dropzone.options.dropzone = {
-			// 	maxFiles: 1,
-			// 	maxFilesize: 2,
-			// 	acceptedFiles: ".jpg,.gif,.png,.jpeg",
-			// 	addRemoveLinks: true,
-			// 	dictRemoveFile: "删除",
-			// 	success: function(file) {
-			// 		// $("#dropzone").find("input").val(file.xhr.response);
-			// 		// $("#dropzone-img-id").attr("src", file.xhr.response);
-			// 		alert('1')
-			// 	}
-			// }
-		</script>
 	</body>
 </html>

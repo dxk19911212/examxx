@@ -8,6 +8,7 @@ var question_import={
 			this.questionDataProcess();
 		},
 		prepareUploadify : function prepareUploadify(){
+			// todo
 			// $("#uploadify-excel").uploadify({
 			//     	'debug'	 : false,
 			// 		'buttonText'	: '点击上传附件',
@@ -46,7 +47,6 @@ var question_import={
 		questionDataProcess : function questionDataProcess(){
 			$("#question-import-form").submit(function(){
 				var filePath = $("#div-file-list").find("input").val();
-				console.log(filePath)
 
 				$.ajax({
 					headers : {

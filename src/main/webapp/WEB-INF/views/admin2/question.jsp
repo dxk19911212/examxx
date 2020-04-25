@@ -108,7 +108,7 @@ String basePath = request.getScheme() + "://"
 								<a href="admin/paper"> <i class="fa fa-list-ul"></i> 试卷管理 </a>
 							</li>
 							<li>
-								<a href="admin/upload-data"> <i class="fa fa-list-ul"></i> 资料上传 </a>
+								<a href="admin/media"> <i class="fa fa-list-ul"></i> 资料上传 </a>
 							</li>
 						</ul>
 					</div>
@@ -533,18 +533,18 @@ String basePath = request.getScheme() + "://"
 													</div>
 													<div class="form-line add-update-quetstionfile">
 														<span class="form-label">上传图片：</span>
-														<form id="dropzone" action="upload-img" class="dropzone">
-															<div class="dz-default dz-message">
-																<span>将文件拖至此处或点击选择</span>
-															</div>
-															<input type="hidden" name="file_id"/>
-														</form>
+														<input type="file" name="file" id="upload-img">
+														<div>
+															<img id="img_preview" src="" style="width: 100px;">
+														</div>
 														<span class="form-message">请上传png、jpg图片文件，且不能大于100KB。为了使得图片显示正常，请上传的图片长宽比例为2:1</span>
 													</div>
 <%--												</form>--%>
 											</div>
 										</div>
-
+										<div class="modal-footer">
+											<button id="btn_upload" type="button" class="btn btn-primary">上传</button>
+										</div>
 									</div><!-- /.modal-content -->
 								</div><!-- /.modal-dialog -->
 							</div>
@@ -572,8 +572,6 @@ String basePath = request.getScheme() + "://"
 		<!-- Javascript files -->
 		<!-- jQuery -->
 		<script type="text/javascript" src="resources/js/jquery/jquery-1.9.0.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="resources/js/upload/dropzone.min.css">
-		<script type="text/javascript" src="resources/js/upload/dropzone.min.js"></script>
 		<!-- Bootstrap JS -->
 		<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="resources/js/all.js"></script>
@@ -582,13 +580,14 @@ String basePath = request.getScheme() + "://"
 		<script type="text/javascript" src="resources/js/question-add.js"></script>
 		<script type="text/javascript" src="resources/js/question-import.js"></script>
 		<script type="text/javascript" src="resources/js/question-upload-img.js"></script>
+		<!-- qiniu -->
+		<script type="text/javascript" src="resources/js/qiniu/qiniu.min.js"></script>
 
-		<script>
+		<script type="text/javascript">
 			$(function(){
 				$(".change-property").click(function(){
 					$("#change-property-modal").modal({backdrop:true,keyboard:true});
 					var paper_id =  $(this).parent().parent().find(":checkbox").val();
-					console.log("paper_id:"+paper_id)
 					$("#add-update-questionid").text(paper_id);
 					$.ajax({
 							   headers : {
@@ -651,7 +650,6 @@ String basePath = request.getScheme() + "://"
 				$("#update-exampaper-btn").click(function(){
 					var questionId = $("#add-update-questionid").text();
 					var pointId = $("#point-from-select option:selected").val();
-					console.log("pointId:" + pointId)
 
 					if(pointId == null || pointId == ""){
 						util.error("请选择知识类");
@@ -717,6 +715,20 @@ String basePath = request.getScheme() + "://"
 								util.error("操作失败请稍后尝试");
 							}
 						});
+					}
+				});
+
+				$("#upload-img").change(function (e) {
+					// 获取目标文件
+					var file = e.target.files || e.dataTransfer.files;
+					if (file) {
+						var reader = new FileReader();
+						// 文件装载后将其显示在图片预览里
+						reader.onload = function () {
+							$("#img_preview").attr("src", this.result);
+						};
+						// 装载文件
+						reader.readAsDataURL(file[0]);
 					}
 				});
 			});

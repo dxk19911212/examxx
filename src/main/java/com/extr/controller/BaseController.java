@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,30 +21,36 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.extr.controller.domain.MediaFilter;
+import com.extr.controller.domain.Message;
 import com.extr.controller.domain.PaperFilter;
 import com.extr.controller.domain.QuestionFilter;
 import com.extr.controller.domain.QuestionImproveResult;
+import com.extr.domain.Media;
 import com.extr.domain.exam.ExamHistory;
 import com.extr.domain.exam.ExamPaper;
-import com.extr.domain.question.Field;
 import com.extr.domain.question.KnowledgePoint;
 import com.extr.domain.question.Question;
 import com.extr.domain.question.QuestionHistory;
 import com.extr.domain.question.UserQuestionHistory;
+import com.extr.file.util.FileTypeUtil;
 import com.extr.security.UserInfo;
 import com.extr.service.ExamService;
+import com.extr.service.MediaService;
 import com.extr.service.QuestionService;
-import com.extr.service.UserService;
 import com.extr.util.Page;
 import com.extr.util.PagingUtil;
 import com.extr.util.xml.DateUtil;
+import com.qiniu.util.Auth;
 
 @Controller
 public class BaseController {
@@ -51,15 +58,12 @@ public class BaseController {
 	@Autowired
 	private ExamService examService;
 	@Autowired
-	private UserService userService;
-	@Autowired
 	private QuestionService questionService;
-
-	@Value("${file.upload-path}")
-	private String filePath;
+	@Autowired
+	private MediaService mediaService;
 
 	/**
-	 * 网站首页
+	 * 网站首页入口
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model, HttpServletRequest request) {
@@ -71,11 +75,11 @@ public class BaseController {
 	 */
 	@RequestMapping(value = { "/admin/home" }, method = RequestMethod.GET)
 	public String adminHome(Model model, HttpServletRequest request) {
-		return "admin2/home";
+		return "redirect:homemedia-0.html";
 	}
 
 	/**
-	 * 判断不同角色返回的页面
+	 * 判断不同角色返回的页面（分流）
 	 */
 	@RequestMapping(value = { "home" }, method = RequestMethod.GET)
 	public String directToBaseHomePage(Model model, HttpServletRequest request) {
@@ -109,12 +113,32 @@ public class BaseController {
 			return "redirect:teacher/home";
 		} else if (grantedAuthorities.contains(new GrantedAuthorityImpl("ROLE_STUDENT"))) {
 			this.appendBaseInfo(model);
-
-			return "home";
+			return "redirect:homemedia-0.html";
 		} else {
-			return "home";
+			return "redirect:homemedia-0.html";
 		}
 	}
+
+	/**
+	 * 首页展示
+	 */
+	@RequestMapping(value = "/homemedia-{title}.html", method = RequestMethod.GET)
+	public String mediaListFilterPage(Model model,
+									  @PathVariable("title") String title) {
+		Page<Media> pageModel = new Page<>();
+		pageModel.setPageNo(1);
+		pageModel.setPageSize(10);
+
+		MediaFilter mf = new MediaFilter();
+		mf.setTitle("0".equals(title) ? "" : title);
+
+		List<Media> mediaList = mediaService.getMediaListByCondition(mf, pageModel);
+		// 保存筛选信息
+		model.addAttribute("mediaFilter", mf);
+		model.addAttribute("mediaList", mediaList);
+		return "home";
+	}
+
 
 	/**
 	 * 跳转模拟考试（员工）
@@ -303,7 +327,6 @@ public class BaseController {
 		admin, teacher, student;
 	}
 
-
 	public void appendBaseInfo(Model model){
 		List<ExamPaper> historypaper = examService.getExamPaperList4Exam(1);
 		List<ExamPaper> practicepaper = examService.getExamPaperList4Exam(2);
@@ -426,39 +449,6 @@ public class BaseController {
 		model.addAttribute("expertpaper", expertpaper);
 		model.addAttribute("knowledgelist", kl);
 
-	}
-
-	/**
-	 * 上传图片
-	 */
-	@RequestMapping(value="/upload-img", method=RequestMethod.POST)
-    @ResponseBody
-	public String handleFileUpload(MultipartHttpServletRequest request){
-		Iterator<String> iterator = request.getFileNames();
-		String fileName = "";
-
-		while (iterator.hasNext()) {
-		MultipartFile multipartFile = request.getFile(iterator.next());
-		fileName = UUID.randomUUID() + "_" + multipartFile.getOriginalFilename();
-			try {
-				File file = new File(filePath, fileName);
-				if (!file.getParentFile().exists()) {
-					file.getParentFile().mkdirs();
-				}
-				multipartFile.transferTo(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return filePath + "/" + fileName;
-	}
-
-	/**
-	 * 资料上传
-	 */
-	@RequestMapping(value = { "/admin/upload-data" }, method = RequestMethod.GET)
-	public String adminDataUpload(Model model, HttpServletRequest request) {
-		return "admin2/data-upload";
 	}
 }
 
