@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,15 +41,15 @@ import com.extr.domain.question.KnowledgePoint;
 import com.extr.domain.question.Question;
 import com.extr.domain.question.QuestionHistory;
 import com.extr.domain.question.UserQuestionHistory;
-import com.extr.file.util.FileTypeUtil;
+import com.extr.domain.user.User;
 import com.extr.security.UserInfo;
 import com.extr.service.ExamService;
 import com.extr.service.MediaService;
 import com.extr.service.QuestionService;
+import com.extr.service.UserService;
 import com.extr.util.Page;
 import com.extr.util.PagingUtil;
 import com.extr.util.xml.DateUtil;
-import com.qiniu.util.Auth;
 
 @Controller
 public class BaseController {
@@ -61,6 +60,8 @@ public class BaseController {
 	private QuestionService questionService;
 	@Autowired
 	private MediaService mediaService;
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * 网站首页入口
@@ -161,14 +162,23 @@ public class BaseController {
 	 */
 	@RequestMapping(value = { "/student/exam" }, method = RequestMethod.GET)
 	public String toExam(Model model, HttpServletRequest request) {
+		UserInfo userInfo;
 		try {
-			UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
+			userInfo = (UserInfo) SecurityContextHolder.getContext()
 					.getAuthentication()
 					.getPrincipal();
 		} catch (Exception e) {
 			return "login";
 		}
-		this.appendBaseInfo(model);
+
+		User user = userService.getUserById(userInfo.getUserid());
+
+		PaperFilter pf = new PaperFilter();
+		pf.setDepartments(user.getDepartment());
+		pf.setCategories(user.getCategory());
+		List<ExamPaper> practicepaper = examService.getStudentExamPapers(pf);
+
+		model.addAttribute("practicepaper", practicepaper);
 		return "student2/exam";
 	}
 

@@ -86,24 +86,22 @@ String basePath = request.getScheme() + "://"
 						<p style="font-size: 20px">视频资料</p>
 						<p style="cursor:pointer;">更多</p>
 					</div>
-
 					<hr class="simple" style="color: #6f5499" />
 					<div class="swiper-container">
 						<div class="swiper-wrapper">
 							<c:forEach items="${mediaList }" var="item">
-								<div class="swiper-slide" style="background-color: #24292D">
 								<c:choose>
 									<c:when test="${item.type == 1 }">
-										<img style="width: 220px;height: 220px;" alt="" src="${item.url }">
-									</c:when>
-									<c:when test="${item.type == 2 }">
-										<a target="_blank" href="${item.url }">${item.url }</a>
+										<div class="swiper-slide" style="background-color: #24292D">
+											<img style="width: 220px;height: 220px;" alt="" src="${item.url }" onclick="javascript:location.href='${item.url }'">
+										</div>
 									</c:when>
 									<c:when test="${item.type == 3 }">
-										<video style="width: 220px;height: 220px;" src="${item.url }" alt=""/>
+										<div class="swiper-slide" style="background-color: #24292D">
+											<video style="width: 220px;height: 220px;" src="${item.url }" alt=""  onclick="javascript:location.href='${item.url }'"/>
+										</div>
 									</c:when>
 								</c:choose>
-								</div>
 							</c:forEach>
 						</div>
 <%--						<div class="swiper-pagination"></div>--%>
@@ -118,6 +116,19 @@ String basePath = request.getScheme() + "://"
 						<p style="cursor:pointer;">更多</p>
 					</div>
 					<hr class="simple" style="color: #6f5499" />
+					<div class="container">
+						<ul>
+						<c:forEach items="${mediaList }" var="item">
+							<c:choose>
+								<c:when test="${item.type == 2 }">
+									<li>
+									<a target="_blank" href="${item.url }">${item.title }</a>
+									</li>
+								</c:when>
+							</c:choose>
+						</c:forEach>
+						</ul>
+					</div>
 				</div>
 				</div>
 			</div>
@@ -176,9 +187,9 @@ String basePath = request.getScheme() + "://"
 			});
 
 			$("#search-btn").click(function () {
-				var title = $("#search-input").val();
+				var title = $("#search-input").text();
 				document.location.href =
-						document.getElementsByTagName('base')[0].href + 'admin/homemedia-' + title + '.html';
+						document.getElementsByTagName('base')[0].href + 'admin/homemedia-2.html';
 			});
 		</script>
 	</body>

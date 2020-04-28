@@ -295,7 +295,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 																</form>
 														     </div>
 														     <div class="modal-footer">
-				        										<button type="button" class="btn btn-default" data-dismiss="modal">关闭窗口</button>
 				        										<button id="update-exampaper-btn" type="button" class="btn btn-primary">确定修改</button>
 				      										 </div>
 													    </div>

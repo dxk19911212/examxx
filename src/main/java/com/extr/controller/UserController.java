@@ -139,17 +139,20 @@ public class UserController {
 	}
 	
 	
+//	/**
+//	 * 跳转修改密码页面
+//	 */
+//	@RequestMapping(value = { "student/change-password" }, method = RequestMethod.GET)
+//	public String changePasswordPage() {
+//		return "student/change-password";
+//	}
+
 	/**
-	 * 修改密码页面
-	 * 
+	 * 用户修改密码
+	 * @param user
 	 * @return
 	 */
-	@RequestMapping(value = { "student/change-password" }, method = RequestMethod.GET)
-	public String changePasswordPage() {
-		return "student/change-password";
-	}
-	
-	@RequestMapping(value = { "change-pwd" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "student/change-pwd" }, method = RequestMethod.POST)
 	public @ResponseBody Message changePassword(@RequestBody User user){
 		Message message = new Message();
 		UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
@@ -169,21 +172,22 @@ public class UserController {
 		
 		return message;
 	}
+
 	/**
-	 * 修改密码页面
-	 * 
-	 * @return
+	 * 用户信息页
 	 */
-	@RequestMapping(value = { "student/setting" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "student/info" }, method = RequestMethod.GET)
 	public String settingPage(Model model) {
-		
 		UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 		User user = userService.getUserById(userInfo.getUserid());
 		model.addAttribute("user", user);
-		return "student/setting";
+		return "student2/info";
 	}
-	
+
+	/**
+	 * 修改用户信息
+	 */
 	@RequestMapping(value = { "setting" }, method = RequestMethod.POST)
 	public @ResponseBody Message setting(@RequestBody User user){
 		Message message = new Message();
@@ -240,13 +244,14 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/admin/add-user" }, method = RequestMethod.POST)
 	public @ResponseBody Message addUser(@RequestBody User user){
-		user.setCreate_date(new Date());
+		Message message = new Message();
+
 		String password = user.getPassword() + "{" + user.getUsername() + "}";
 		PasswordEncoder passwordEncoder = new StandardPasswordEncoderForSha1();
 		String resultPassword = passwordEncoder.encode(password);
 		user.setPassword(resultPassword);
 		user.setEnabled("1");
-		Message message = new Message();
+		user.setCreate_date(new Date());
 		try {
 			userService.addUser(user);
 		} catch (Exception e) {

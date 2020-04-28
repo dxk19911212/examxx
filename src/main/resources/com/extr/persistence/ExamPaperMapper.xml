@@ -78,4 +78,15 @@
 	<delete id="deleteExamPaper">
 		delete from et_exam_paper where id=#{id} and status=0
 	</delete>
+
+	<select id="selectStudentExamPaper" resultType="com.extr.domain.exam.ExamPaper">
+		select
+			id as id,
+			`name` as name,
+			 departments as departments,
+			 categories as categories
+		from et_exam_paper
+		where status = 2
+		and start_time >= now()
+	</select>
 </mapper>

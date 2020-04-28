@@ -31,8 +31,8 @@ public class User implements Serializable {
 	// 警种
 	private String category;
 	// 警号
-	private String officerNumber;
-	
+	private String officer_number;
+
 	public Date getLoginTime() {
 		return loginTime;
 	}
@@ -142,7 +142,7 @@ public class User implements Serializable {
 	public String getFieldName() {
 		return fieldName;
 	}
-	
+
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
 	}
@@ -178,6 +178,20 @@ public class User implements Serializable {
 	public void setDepartment(String department) {
 		this.department = department;
 	}
-	
-	
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getOfficer_number() {
+		return officer_number;
+	}
+
+	public void setOfficer_number(String officer_number) {
+		this.officer_number = officer_number;
+	}
 }

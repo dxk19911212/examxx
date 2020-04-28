@@ -99,19 +99,18 @@ String basePath = request.getScheme() + "://"
 					<div class="swiper-container">
 						<div class="swiper-wrapper">
 							<c:forEach items="${mediaList }" var="item">
-								<div class="swiper-slide" style="background-color: #24292D">
-									<c:choose>
-										<c:when test="${item.type == 1 }">
-											<img style="width: 220px;height: 220px;" alt="" src="${item.url }">
-										</c:when>
-										<c:when test="${item.type == 2 }">
-											<a target="_blank" href="${item.url }">${item.url }</a>
-										</c:when>
-										<c:when test="${item.type == 3 }">
-											<video style="width: 220px;height: 220px;" src="${item.url }" alt=""/>
-										</c:when>
-									</c:choose>
-								</div>
+								<c:choose>
+									<c:when test="${item.type == 1 }">
+										<div class="swiper-slide" style="background-color: #24292D">
+											<img style="width: 220px;height: 220px;" alt="" src="${item.url }" onclick="javascript:location.href='${item.url }'">
+										</div>
+									</c:when>
+									<c:when test="${item.type == 3 }">
+										<div class="swiper-slide" style="background-color: #24292D">
+											<video style="width: 220px;height: 220px;" src="${item.url }" alt=""  onclick="javascript:location.href='${item.url }'"/>
+										</div>
+									</c:when>
+								</c:choose>
 							</c:forEach>
 						</div>
 						<%--						<div class="swiper-pagination"></div>--%>
@@ -126,24 +125,22 @@ String basePath = request.getScheme() + "://"
 						<p style="cursor:pointer;">更多</p>
 					</div>
 					<hr class="simple" style="color: #6f5499" />
+					<div class="container">
+						<ul>
+							<c:forEach items="${mediaList }" var="item">
+								<c:choose>
+									<c:when test="${item.type == 2 }">
+										<li>
+											<a target="_blank" href="${item.url }">${item.title }</a>
+										</li>
+									</c:when>
+								</c:choose>
+							</c:forEach>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
-<%--		<footer>--%>
-<%--			<div class="container">--%>
-<%--				<div class="row">--%>
-<%--					<div class="col-md-12">--%>
-<%--						<div class="copy">--%>
-<%--							<p>--%>
-<%--								Exam++ Copyright © <a href="http://www.examxx.net/" target="_blank">Exam++</a> - <a href="." target="_blank">主页</a> | <a href="http://www.examxx.net/" target="_blank">关于我们</a> | <a href="http://www.examxx.net/" target="_blank">FAQ</a> | <a href="http://www.examxx.net/" target="_blank">联系我们</a>--%>
-<%--							</p>--%>
-<%--						</div>--%>
-<%--					</div>--%>
-<%--				</div>--%>
-<%--			</div>--%>
-<%--		</footer>--%>
-
-		<!-- Slider Ends -->
 
 		<!-- Javascript files -->
 		<!-- jQuery -->

@@ -8,14 +8,15 @@
 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="id"
 		parameterType="com.extr.domain.user.User">
 		insert into
-		et_user(username,password,email,phone,add_date,expire_date,add_by,enabled,truename,field_id,province,company,department)
+		et_user(username,password,email,phone,add_date,expire_date,add_by,
+		enabled,truename,field_id,province,company,department,category,officer_number)
 		value
-		(#{username},#{password},#{email},#{phone},#{create_date},#{expire_date},#{creator},#{enabled},#{truename},#{fieldId},#{province},#{company},#{department})
+		(#{username},#{password},#{email},#{phone},#{create_date},#{expire_date},#{creator},#{enabled},
+		#{truename},#{fieldId},#{province},#{company},#{department},#{category},#{officer_number})
 	</insert>
 	<update id="updateUser" parameterType="com.extr.domain.user.User">
 		update et_user
 		<set>
-
 			<if test="user.truename != null">truename=#{user.truename},</if>
 			<if test="user.password != null">password=#{user.password},</if>
 			<if test="user.email != null">email=#{user.email},</if>
@@ -24,14 +25,15 @@
 			<if test="user.expire_date != null">expire_date=#{user.expire_date},</if>
 			<if test="user.creator != null">add_by=#{user.creator},</if>
 			<if test="user.enabled != null">enabled=#{user.enabled},</if>
-			<if test="user.fieldId != 0">field_id=#{user.fieldId},</if>
+			<if test="user.fieldId != null">field_id=#{user.fieldId},</if>
 			<if test="user.loginTime != null">login_time=#{user.loginTime},</if>
 			<if test="user.lastLoginTime != null">last_login_time=#{user.lastLoginTime},</if>
 			<if test="user.province != 0">province=#{user.province},</if>
 			<if test="user.company != null">company=#{user.company},</if>
 			<if test="user.department != null">department=#{user.department},</if>
-			<if test="user.username != null">username=#{user.username}</if>
-			<if test="user.id != 0">id=#{user.id}</if>
+			<if test="user.username != null">username=#{user.username},</if>
+			<if test="user.category != null">category=#{user.category},</if>
+			<if test="user.officer_number != null">officer_number=#{user.officer_number},</if>
 		</set>
 		<where>
 			(username = #{user.username} or id=#{user.id})
@@ -45,17 +47,27 @@
 		id=#{id}
 	</delete>
 	<select id="getUserById" resultType="com.extr.domain.user.User">
-		select a.id as id,a.username
-		as username,a.truename as truename,
-		a.`password` as `password`,a.email
-		as email,a.phone as phone,
-		a.add_date as create_date,a.expire_date as
-		expire_date,a.add_by as creator,
-		a.enabled as enabled,a.field_id as
-		fieldId,
-		b.field_name as fieldName,
-		a.last_login_time as lastLoginTime,
-		a.login_time as loginTime,province,company,department from et_user a,et_field b
+		select
+			a.id as id,
+			a.username as username,
+			a.truename as truename,
+			a.`password` as `password`,
+			a.email as email,
+			a.phone as phone,
+			a.add_date as create_date,
+			a.expire_date as expire_date,
+			a.add_by as creator,
+			a.enabled as enabled,
+			a.field_id as fieldId,
+			b.field_name as fieldName,
+			a.last_login_time as lastLoginTime,
+			a.login_time as loginTime,
+			a.province as province,
+			a.company as company,
+			a.department as department,
+			a.category as category,
+			a.officer_number as officer_number
+			from et_user a,et_field b
 		where
 		id=#{id} and
 		a.field_id=b.field_id
@@ -110,15 +122,27 @@
 		(#{user_id},#{role_id})
 	</insert>
 	<select id="getUserListByRoleId" resultType="com.extr.domain.user.User">
-		select a.id as
-		id,a.username as username,a.truename as truename,
+		select
+		a.id as id,
+		a.username as username,
+		a.truename as truename,
 		a.`password` as
-		`password`,a.email as email,a.phone as phone,
+		`password`,
+		a.email as email,
+		a.phone as phone,
 		a.add_date as
-		create_date,a.expire_date as expire_date,
+		create_date,
+		a.expire_date as expire_date,
 		(select username from et_user
-		m where m.id=a.add_by) as creator,(select field_name from et_field where field_id=a.field_id) as fieldName,
-		a.enabled as enabled,province,company,department from et_user
+		m where m.id=a.add_by) as creator,
+		(select field_name from et_field where field_id=a.field_id) as fieldName,
+		a.enabled as enabled,
+		province,
+		company,
+		department,
+		 category,
+		 officer_number
+		 from et_user
 		a,et_r_user_role b
 		where a.id=b.user_id and
 		b.role_id=#{role_id}

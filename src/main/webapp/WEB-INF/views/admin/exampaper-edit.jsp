@@ -211,7 +211,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						        <iframe  id="qt-selector-iframe" src="admin/questionfilterdialog-0-0-0-0-1.html" width="100%"></iframe>
 						      </div>
 						      <div class="modal-footer">
-							        <button type="button" class="btn btn-default" data-dismiss="modal">关闭窗口</button>
 							        <button id="add-list-to-exampaper" type="button" class="btn btn-primary">添加选中</button>
 							      </div>
 						      

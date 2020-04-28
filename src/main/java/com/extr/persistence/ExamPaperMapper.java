@@ -22,4 +22,6 @@ public interface ExamPaperMapper {
 	public List<ExamPaper> getExamPaperList4Exam(@Param("paperType")int paperType);
 	
 	public void deleteExamPaper(int id);
+
+	List<ExamPaper> selectStudentExamPaper(@Param("filter") PaperFilter filter);
 }

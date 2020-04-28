@@ -88,6 +88,9 @@ String basePath = request.getScheme() + "://"
 					<li>
 						<a href="admin/media"> <i class="fa fa-list-ul"></i> 资料上传 </a>
 					</li>
+                    <li>
+                        <a href="admin/user-list"> <i class="fa fa-list-ul"></i> 会员管理 </a>
+                    </li>
 				</ul>
 			</div>
 			<div class="col-xs-10">
@@ -303,7 +306,6 @@ String basePath = request.getScheme() + "://"
 											</form>
 										</div>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-default" data-dismiss="modal">关闭窗口</button>
 											<button id="update-exampaper-btn" type="button" class="btn btn-primary">确定修改</button>
 										</div>
 									</div>

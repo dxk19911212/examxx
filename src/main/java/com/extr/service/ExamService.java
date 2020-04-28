@@ -50,4 +50,6 @@ public interface ExamService {
 	public List<ExamHistory> getUserExamHistoryListByUserId(int userId,Page<ExamHistory> page);
 	
 	public void deleteExamPaper(int id);
+
+	List<ExamPaper> getStudentExamPapers(PaperFilter pf);
 }

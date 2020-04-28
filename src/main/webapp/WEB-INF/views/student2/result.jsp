@@ -84,8 +84,7 @@ String basePath = request.getScheme() + "://"
 							<a href="student/result"> <i class="fa fa-list-ul"></i> 成绩查询 </a>
 						</li>
 						<li>
-							<a href="student/info/${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
-								<i class="fa fa-list-ul"></i> 个人中心 </a>
+							<a href="student/info"><i class="fa fa-list-ul"></i> 个人中心 </a>
 						</li>
 					</ul>
 
@@ -145,6 +144,5 @@ String basePath = request.getScheme() + "://"
 		<script type="text/javascript" src="resources/js/all.js"></script>
 		<!-- Bootstrap JS -->
 		<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="resources/js/exampaper-list.js"></script>
 	</body>
 </html>

@@ -198,4 +198,18 @@ public class ExamServiceImpl implements ExamService {
 		examPaperMapper.deleteExamPaper(id);
 	}
 
+	@Override
+	public List<ExamPaper> getStudentExamPapers(PaperFilter pf) {
+		List<ExamPaper> examPapers = examPaperMapper.selectStudentExamPaper(pf);
+
+		List<String> departmentList = Arrays.asList(pf.getDepartments().split(","));
+		List<String> categoryList = Arrays.asList(pf.getCategories().split(","));
+
+		// 对开放部门、警种做过滤处理
+		return examPapers.stream()
+				.filter(examPaper -> isCoincide(departmentList, Arrays.asList(examPaper.getDepartments().split(",")))
+						&& isCoincide(categoryList, Arrays.asList(examPaper.getCategories().split(","))))
+				.collect(Collectors.toList());
+	}
+
 }
