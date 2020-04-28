@@ -103,9 +103,7 @@ var question_list = {
 					   if (!util.checkSessionOut(jqXHR))
 						   return false;
 					   if (message.result == "success") {
-						   util.success("添加成功", function() {
-							   document.location.href = document.getElementsByTagName('base')[0].href + 'admin/media';
-						   });
+							document.location.href = document.getElementsByTagName('base')[0].href + 'admin/media';
 					   } else {
 						   util.error("保存资料失败");
 					   }

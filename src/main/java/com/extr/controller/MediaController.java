@@ -77,7 +77,7 @@ public class MediaController {
 
         Page<Media> pageModel = new Page<>();
         pageModel.setPageNo(page);
-        pageModel.setPageSize(15);
+        pageModel.setPageSize(10);
 
         MediaFilter mf = new MediaFilter();
         mf.setType(type);
@@ -107,9 +107,15 @@ public class MediaController {
         mf.setTitle("0".equals(title) ? "" : title);
 
         List<Media> mediaList = mediaService.getMediaListByCondition(mf, pageModel);
+        // 文档list
+        mf.setType(2);
+        pageModel.setPageSize(20);
+        List<Media> mediaList2 = mediaService.getMediaListByCondition(mf, pageModel);
+
         // 保存筛选信息
         model.addAttribute("mediaFilter", mf);
         model.addAttribute("mediaList", mediaList);
+        model.addAttribute("mediaList2", mediaList2);
         return "admin2/home";
     }
 

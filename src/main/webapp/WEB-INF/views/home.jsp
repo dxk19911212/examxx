@@ -127,7 +127,7 @@ String basePath = request.getScheme() + "://"
 					<hr class="simple" style="color: #6f5499" />
 					<div class="container">
 						<ul>
-							<c:forEach items="${mediaList }" var="item">
+							<c:forEach items="${mediaList2 }" var="item">
 								<c:choose>
 									<c:when test="${item.type == 2 }">
 										<li>
