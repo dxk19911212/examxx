@@ -13,8 +13,15 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, title, `type`, url, thumbnail_url, `desc`, creator, create_time
-  </sql>
+        id as id,
+        title as title,
+        `type` as `type`,
+        url as url,
+        thumbnail_url as thumbnailUrl,
+        `desc` as `desc`,
+        creator as creator,
+        create_time as createTime
+      </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

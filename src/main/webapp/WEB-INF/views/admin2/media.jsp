@@ -156,7 +156,7 @@ String basePath = request.getScheme() + "://"
 										<input type="checkbox" value="${item.id }">
 									</td>
 									<td>${item.id }</td>
-									<td>
+									<td style="width:200px;word-break:break-all">
 										<c:choose>
 											<c:when test="${item.type == 1 }">
 												<img src="${item.url }" alt=""/>
@@ -187,7 +187,7 @@ String basePath = request.getScheme() + "://"
 									<td>${item.creator }</td>
 									<td>
 										<span class="td-paper-starttime">
-											<fmt:formatDate value="${item.createTime }" pattern="yyyy-MM-dd HH:mm:ss"/>
+											<fmt:formatDate value="${item.createTime }" pattern="yyyy-MM-dd"/>
 										</span>
 									</td>
 									<td>
