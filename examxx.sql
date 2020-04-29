@@ -720,8 +720,8 @@ CREATE TABLE `t_c3p0` (
 -- Records of t_c3p0
 -- ----------------------------
 
-DROP TABLE IF EXISTS `ex_department`;
-CREATE TABLE ex_department
+DROP TABLE IF EXISTS `et_department`;
+CREATE TABLE et_department
 (
 	id int auto_increment,
 	depart_name varchar(50) default '' not null comment '部门名称',
@@ -732,8 +732,8 @@ CREATE TABLE ex_department
 )
 comment '部门表';
 
-DROP TABLE IF EXISTS `ex_category`;
-CREATE TABLE ex_category
+DROP TABLE IF EXISTS `et_category`;
+CREATE TABLE et_category
 (
 	id int auto_increment,
 	category_name varchar(50) default '' not null comment '警种名称',
