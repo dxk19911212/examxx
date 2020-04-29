@@ -85,7 +85,7 @@ String basePath = request.getScheme() + "://"
 					<div class="form-group">
 						检索内容：
 						<input id="search-input" type="text" class="form-control" placeholder="" value="${mediaFilter.title}">
-						<button id="search-btn" type="submit" class="btn btn-default" style="margin-left: 20px">查询</button>
+						<button id="search-btn" type="button" class="btn btn-default" style="margin-left: 20px">查询</button>
 					</div>
 				</form>
 
@@ -195,7 +195,7 @@ String basePath = request.getScheme() + "://"
 		$("#search-btn").click(function () {
 			var title = $("#search-input").val();
 			document.location.href =
-					document.getElementsByTagName('base')[0].href + 'homemedia-' + title + '.html';
+					document.getElementsByTagName('base')[0].href + 'student/homemedia-' + title + '.html';
 		});
 		</script>
 	</body>

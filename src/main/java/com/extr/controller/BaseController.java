@@ -114,16 +114,16 @@ public class BaseController {
 			return "redirect:teacher/home";
 		} else if (grantedAuthorities.contains(new GrantedAuthorityImpl("ROLE_STUDENT"))) {
 			this.appendBaseInfo(model);
-			return "redirect:homemedia-0.html";
+			return "redirect:student/homemedia-0.html";
 		} else {
-			return "redirect:homemedia-0.html";
+			return "redirect:student/homemedia-0.html";
 		}
 	}
 
 	/**
 	 * 首页展示
 	 */
-	@RequestMapping(value = "/homemedia-{title}.html", method = RequestMethod.GET)
+	@RequestMapping(value = "/student/homemedia-{title}.html", method = RequestMethod.GET)
 	public String mediaListFilterPage(Model model,
 									  @PathVariable("title") String title) {
 		Page<Media> pageModel = new Page<>();

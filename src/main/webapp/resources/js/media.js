@@ -10,6 +10,53 @@ var question_list = {
 		this.deleteMedia();
 	},
 
+	// 自动搜索的查询条件
+	bindChangeSearchParam : function bindChangeSearchParam(){
+		$("#question-filter dl dd span").click(function(){
+			if($(this).hasClass("label"))return false;
+
+			var genrateParamOld = question_list.genrateParamOld();
+
+			if($(this).parent().parent().attr("id") == "question-filter-type"){
+				genrateParamOld.type = $(this).data("id");
+				question_list.redirectUrl(genrateParamOld);
+			}
+		});
+
+		$(".pagination li a").click(function(){
+			var pageId = $(this).data("id");
+			if(pageId == null || pageId == "")return false;
+			var genrateParamOld = question_list.genrateParamOld();
+			genrateParamOld.page = pageId;
+			question_list.redirectUrl(genrateParamOld);
+
+		});
+	},
+
+	// 手动搜索的查询条件
+	bindChangeSearchParam2 : function bindChangeSearchParam2(){
+		$("#question-filter-search").click(function(){
+			var genrateParamOld = question_list.genrateParamOld();
+
+			if($(this).parent().parent().attr("id") == "question-filter-type"){
+				genrateParamOld.type = $(this).data("id");
+				question_list.redirectUrl(genrateParamOld);
+			} else {
+				genrateParamOld.title = $('#question-filter-title-input').val();
+				question_list.redirectUrl(genrateParamOld);
+			}
+		});
+
+		$(".pagination li a").click(function(){
+			var pageId = $(this).data("id");
+			if(pageId == null || pageId == "")return false;
+			var genrateParamOld = question_list.genrateParamOld();
+			genrateParamOld.page = pageId;
+			question_list.redirectUrl(genrateParamOld);
+
+		});
+	},
+
 	// 上传文件到七牛
 	uploadFile: function uploadFile() {
 		$("#btn_upload").click(function () {
@@ -113,53 +160,6 @@ var question_list = {
 				   }
 			   });
 			}
-	},
-
-	// 自动搜索的查询条件
-	bindChangeSearchParam : function bindChangeSearchParam(){
-		$("#question-filter dl dd span").click(function(){
-			if($(this).hasClass("label"))return false;
-
-			var genrateParamOld = question_list.genrateParamOld();
-			
-			if($(this).parent().parent().attr("id") == "question-filter-type"){
-				genrateParamOld.type = $(this).data("id");
-				question_list.redirectUrl(genrateParamOld);
-			}
-		});
-		
-		$(".pagination li a").click(function(){
-			var pageId = $(this).data("id");
-			if(pageId == null || pageId == "")return false;
-			var genrateParamOld = question_list.genrateParamOld();
-			genrateParamOld.page = pageId;
-			question_list.redirectUrl(genrateParamOld);
-			
-		});
-	},
-
-	// 手动搜索的查询条件
-	bindChangeSearchParam2 : function bindChangeSearchParam2(){
-		$("#question-filter-search").click(function(){
-			var genrateParamOld = question_list.genrateParamOld();
-
-			if($(this).parent().parent().attr("id") == "question-filter-type"){
-				genrateParamOld.type = $(this).data("id");
-				question_list.redirectUrl(genrateParamOld);
-			} else if ($(this).parent().parent().attr("id") == "question-filter-title-input") {
-				genrateParamOld.title = $('#question-filter-title-input').val();
-				question_list.redirectUrl(genrateParamOld);
-			}
-		});
-
-		$(".pagination li a").click(function(){
-			var pageId = $(this).data("id");
-			if(pageId == null || pageId == "")return false;
-			var genrateParamOld = question_list.genrateParamOld();
-			genrateParamOld.page = pageId;
-			question_list.redirectUrl(genrateParamOld);
-
-		});
 	},
 
 	// 获取查询条件的旧值

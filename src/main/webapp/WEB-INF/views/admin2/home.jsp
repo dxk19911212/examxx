@@ -77,7 +77,7 @@ String basePath = request.getScheme() + "://"
 					<div class="form-group">
 						检索内容：
 						<input id="search-input" type="text" class="form-control" placeholder="" value="${mediaFilter.title}">
-						<button id="search-btn" type="submit" class="btn btn-default" style="margin-left: 20px">查询</button>
+						<button id="search-btn" type="button" class="btn btn-default" style="margin-left: 20px">查询</button>
 					</div>
 				</form>
 
@@ -116,7 +116,7 @@ String basePath = request.getScheme() + "://"
 						<p style="cursor:pointer;">更多</p>
 					</div>
 					<hr class="simple" style="color: #6f5499" />
-					<div class="container">
+					<div class="container" id="file-list">
 						<ul>
 						<c:forEach items="${mediaList2 }" var="item">
 							<c:choose>
@@ -187,9 +187,9 @@ String basePath = request.getScheme() + "://"
 			});
 
 			$("#search-btn").click(function () {
-				var title = $("#search-input").text();
+				var title = $("#search-input").val();
 				document.location.href =
-						document.getElementsByTagName('base')[0].href + 'admin/homemedia-2.html';
+						document.getElementsByTagName('base')[0].href + 'student/homemedia-'+title+'.html';
 			});
 		</script>
 	</body>
