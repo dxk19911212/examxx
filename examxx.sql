@@ -52,7 +52,7 @@ CREATE TABLE `et_exam_paper` (
   `pass_point` int(11) DEFAULT '0',
   `group_id` int(11) NOT NULL COMMENT '班组ID',
   `is_visible` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否所有用户可见，默认为0',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '试卷状态， 0未完成 -> 1已完成 -> 2已发布 -> 3通过审核 （已发布和通过审核的无法再修改）',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '试卷状态（1-未上线, 2-已上线, 3-已下线）',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `summary` varchar(100) DEFAULT NULL COMMENT '试卷介绍',
   `is_subjective` tinyint(1) DEFAULT NULL COMMENT '为1表示为包含主观题的试卷，需阅卷',
@@ -60,6 +60,9 @@ CREATE TABLE `et_exam_paper` (
   `creator` varchar(40) DEFAULT NULL COMMENT '创建人的账号',
   `paper_type` varchar(40) NOT NULL DEFAULT '1' COMMENT '0 真题 1 模拟 2 专家',
   `field_id` int(11) DEFAULT NULL,
+  start_time datetime DEFAULT now() NULL comment '开放时间',
+  departments varchar(100) DEFAULT '' NOT NULL comment '开放部门id（逗号隔开）',
+  categories varchar(100) DEFAULT '' NOT NULL comment '开放警种id（逗号隔开）',
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='试卷';
@@ -644,7 +647,7 @@ CREATE TABLE `et_user` (
   `username` varchar(20) NOT NULL COMMENT '账号',
   `truename` varchar(10) DEFAULT NULL COMMENT '真实姓名',
   `password` char(40) NOT NULL,
-  `email` varchar(40) NOT NULL,
+  `email` varchar(40) NULL,
   `phone` varchar(20) DEFAULT NULL,
   `add_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `expire_date` timestamp NULL DEFAULT NULL,
@@ -655,7 +658,9 @@ CREATE TABLE `et_user` (
   `login_time` timestamp NULL DEFAULT NULL,
   `province` varchar(20) DEFAULT NULL,
   `company` varchar(40) DEFAULT NULL,
-  `department` varchar(40) DEFAULT NULL,
+  `department` varchar(40) DEFAULT '' NOT NULL comment '部门id',
+  category varchar(40) DEFAULT '' NOT NULL comment '警种id',
+  officer_number varchar(20) DEFAULT '' NOT NULL comment '警号',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户表';
@@ -714,3 +719,43 @@ CREATE TABLE `t_c3p0` (
 -- ----------------------------
 -- Records of t_c3p0
 -- ----------------------------
+
+DROP TABLE IF EXISTS `ex_department`;
+CREATE TABLE ex_department
+(
+	id int auto_increment,
+	depart_name varchar(50) default '' not null comment '部门名称',
+	depart_code varchar(50) default '' not null comment '部门编号',
+	`delete` tinyint default 0 not null comment '是否可用（0-可用、1-不可用）',
+	constraint ex_department_pk
+		primary key (id)
+)
+comment '部门表';
+
+DROP TABLE IF EXISTS `ex_category`;
+CREATE TABLE ex_category
+(
+	id int auto_increment,
+	category_name varchar(50) default '' not null comment '警种名称',
+	category_code varchar(50) default '' not null comment '警种编号',
+	`delete` tinyint default 0 not null comment '是否可用（0-可用、1-不可用）',
+	constraint ex_category_pk
+		primary key (id)
+)
+comment '警种表';
+
+DROP TABLE IF EXISTS `et_media`;
+CREATE TABLE et_media
+(
+	id int auto_increment,
+	title varchar(50) default '' not null comment '标题',
+	type varchar(2) default 1 not null comment '类别（1-图片、2-文档、3-视频）',
+	url varchar(255) default '' not null comment '地址',
+	thumbnail_url varchar(255) default '' not null comment '缩略图地址',
+	`desc` varchar(100) default '' not null comment '描述',
+	creator varchar(40) not null comment '上传人',
+	create_time datetime default now() not null comment '上传时间',
+	constraint et_media_pk
+		primary key (id)
+)
+comment '多媒体表';
