@@ -58,6 +58,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			.knowledge-title-name{
 				margin-left:8px;
 			}
+
+			.levelup-practice-modal::-webkit-scrollbar {
+				display: none;
+			}
 		</style>
 	</head>
 	<body>

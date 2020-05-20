@@ -87,6 +87,6 @@
 			 categories as categories
 		from et_exam_paper
 		where status = 2
-		and start_time >= now()
+		and start_time <![CDATA[<= ]]> now()
 	</select>
 </mapper>

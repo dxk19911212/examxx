@@ -20,6 +20,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<link href="resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 		<link href="resources/css/exam.css" rel="stylesheet" type="text/css">
 		<link href="resources/css/style.css" rel="stylesheet">
+		<style>
+			.practice-exampaper-modal::-webkit-scrollbar {
+				display: none;
+			}
+		</style>
 	</head>
 	<body>
 		<header>
