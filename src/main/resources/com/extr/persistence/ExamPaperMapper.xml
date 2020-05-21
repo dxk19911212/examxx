@@ -76,7 +76,7 @@
 	</update>
 	
 	<delete id="deleteExamPaper">
-		delete from et_exam_paper where id=#{id} and status=0
+		delete from et_exam_paper where id=#{id} and status=1
 	</delete>
 
 	<select id="selectStudentExamPaper" resultType="com.extr.domain.exam.ExamPaper">

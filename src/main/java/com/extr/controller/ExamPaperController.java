@@ -153,6 +153,7 @@ public class ExamPaperController {
 		examPaper.setPaper_type(param.getPaperType());
 		examPaper.setCreator(userInfo.getUsername());
 		examPaper.setTotal_point(param.getPaperPoint());
+		examPaper.setStatus(1);
 		
 		
 		//手工组卷
